@@ -6,10 +6,10 @@ class MockController:
         	return poifile.read()
     def faq(self, location):
         with open("faq.json") as faqfile:
-            return poifile.read()
+            return faqfile.read()
     def phrasebook(self, location):
         with open("phrasebook.json") as phrasebookfile:
-            return poifile.read()
+            return phrasebookfile.read()
 
 def setup_routes():
     d = cherrypy.dispatch.RoutesDispatcher()
