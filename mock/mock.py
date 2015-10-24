@@ -1,7 +1,6 @@
 import cherrypy
 
 class MockController:
-
     def poi(self, location):
         with open("poi.json") as poifile:
         	return poifile.read()
@@ -25,4 +24,5 @@ conf = {
 }
 if __name__ == '__main__':
     app = cherrypy.tree.mount(None, config=conf)
+    cherrypy.config.update({'server.socket_host': '0.0.0.0'})
     cherrypy.quickstart(app)
