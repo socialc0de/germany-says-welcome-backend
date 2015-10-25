@@ -2,12 +2,15 @@ import cherrypy
 
 class MockController:
     def poi(self, location):
+        cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
         with open("poi.json") as poifile:
         	return poifile.read()
     def faq(self, location):
+        cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
         with open("faq.json") as faqfile:
             return faqfile.read()
     def phrasebook(self, location):
+        cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
         with open("phrasebook.json") as phrasebookfile:
             return phrasebookfile.read()
 
