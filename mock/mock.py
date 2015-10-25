@@ -13,6 +13,10 @@ class MockController:
         cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
         with open("phrasebook.json") as phrasebookfile:
             return phrasebookfile.read()
+    def wifi(self, location):
+        cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
+        with open("wifi.json") as phrasebookfile:
+            return phrasebookfile.read()
 
 def setup_routes():
     d = cherrypy.dispatch.RoutesDispatcher()
