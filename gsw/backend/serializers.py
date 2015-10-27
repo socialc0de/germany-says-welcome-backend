@@ -19,7 +19,7 @@ class PhraseSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('language', 'translation', 'collection')
 
 class PhraseCollectionSerializer(serializers.HyperlinkedModelSerializer):
-    translations = PhraseSerializer(many=True)
+    translations = PhraseSerializer(many=True, read_only=True)
     class Meta:
         exclude = ('owner',)
         model = PhraseCollection
