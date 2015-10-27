@@ -16,7 +16,7 @@ class POISerializer(serializers.ModelSerializer):
 class PhraseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Phrase
-        fields = ('language', 'translation')
+        fields = ('language', 'translation', 'collection')
 
 class PhraseCollectionSerializer(serializers.HyperlinkedModelSerializer):
     translations = PhraseSerializer(many=True)
