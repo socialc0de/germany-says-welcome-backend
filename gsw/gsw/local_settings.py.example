@@ -1,0 +1,13 @@
+# Database
+# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.mysql', 
+        'NAME': 'DB_NAME',
+        'USER': 'USER_NAME',
+        'PASSWORD': 'PASSWORD',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+    }
+}

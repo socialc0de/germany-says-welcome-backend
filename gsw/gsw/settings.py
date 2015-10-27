@@ -25,8 +25,7 @@ SECRET_KEY = '=f4aydus9$f*c(108mqo!-)b8i@ttb80&h%940z@4bd%)%i8jj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -55,6 +54,13 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'gsw.urls'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'gsw.db'),
+    }
+}
 
 TEMPLATES = [
     {
@@ -95,5 +101,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = "/api/"
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 from gsw.local_settings import *

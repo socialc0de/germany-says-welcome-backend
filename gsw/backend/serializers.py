@@ -30,7 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
     questions = serializers.PrimaryKeyRelatedField(many=True, queryset=Question.objects.all())
     pois = serializers.PrimaryKeyRelatedField(many=True, queryset=POI.objects.all())
     translations = serializers.PrimaryKeyRelatedField(many=True, queryset=Phrase.objects.all())
-    phrasecollections = serializers.PrimaryKeyRelatedField(many=True, queryset=PhraseCollection.objects.all())
+    phrases = serializers.PrimaryKeyRelatedField(many=True, queryset=PhraseCollection.objects.all())
     class Meta:
         model = User
-        fields = ('id', 'username', 'questions', 'pois', 'translations', 'phrasecollections')
+        fields = ('id', 'username', 'questions', 'pois', 'translations', 'phrases')
