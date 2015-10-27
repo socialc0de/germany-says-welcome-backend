@@ -28,5 +28,7 @@ class Phrase(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     language = models.CharField(max_length=2)
     collection = models.ForeignKey('PhraseCollection', related_name='translations')
+    def __str__(self):
+        return self.translation
 
 

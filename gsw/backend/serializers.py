@@ -12,19 +12,20 @@ class POISerializer(serializers.ModelSerializer):
         model = POI
         exclude = ('owner',)
 
+
+class PhraseSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Phrase
+        fields = ('language', 'translation')
+
 class PhraseCollectionSerializer(serializers.HyperlinkedModelSerializer):
-    translations = serializers.StringRelatedField(many=True)
+    translations = PhraseSerializer(many=True)
     class Meta:
         exclude = ('owner',)
         model = PhraseCollection
         extra_kwargs = {
             'language': {'lookup_field': 'phrase__language'}
         }
-
-class PhraseSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Phrase
-        exclude = ('owner',)
 
 class UserSerializer(serializers.ModelSerializer):
     questions = serializers.PrimaryKeyRelatedField(many=True, queryset=Question.objects.all())
