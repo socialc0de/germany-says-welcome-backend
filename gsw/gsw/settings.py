@@ -107,6 +107,6 @@ LOGIN_REDIRECT_URL = "/api/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 
 from gsw.local_settings import *
