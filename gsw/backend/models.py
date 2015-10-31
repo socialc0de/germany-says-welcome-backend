@@ -12,6 +12,7 @@ class POI(models.Model):
     owner = models.ForeignKey('auth.User', related_name='pois')
     created = models.DateTimeField(auto_now_add=True)
     description = models.CharField(max_length=200)
+    type = models.CharField(max_length=20)
     location = models.PointField()
     county = models.IntegerField()
 
