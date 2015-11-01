@@ -5,21 +5,31 @@ from django.contrib.auth.models import User
 from rest_framework import permissions
 from backend.permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
 from rest_framework import filters
+from rest_framework.decorators import detail_route
+from rest_framework.response import Response
+
+class QuestionCountyViewSet(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
+    lookup_field = "county"
+
+class QuestionAudienceViewSet(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
+    lookup_field = "audiences"
 
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly,)
+    permission_classes = (IsOwnerOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('question',)
-    lookup_field = "county"
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-
 class POIViewSet(viewsets.ModelViewSet):
-
     queryset = POI.objects.all()
     serializer_class = POISerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
@@ -38,7 +48,6 @@ class PhraseCollectionViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 class PhraseViewSet(viewsets.ModelViewSet):
-
     queryset = Phrase.objects.all()
     serializer_class = PhraseSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
@@ -47,7 +56,6 @@ class PhraseViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 class UserViewSet(viewsets.ModelViewSet):
-
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAdminUser,)

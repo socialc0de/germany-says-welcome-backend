@@ -22,6 +22,8 @@ from backend import views
 from rest_framework.routers import DefaultRouter
 
 apirouter = DefaultRouter()
+apirouter.register(r'faq/by-county', views.QuestionCountyViewSet)
+apirouter.register(r'faq/by-audience', views.QuestionAudienceViewSet)
 apirouter.register(r'faq', views.QuestionViewSet)
 apirouter.register(r'audience', views.AudienceViewSet)
 apirouter.register(r'poi', views.POIViewSet)
