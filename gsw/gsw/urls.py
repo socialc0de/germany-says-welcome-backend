@@ -23,7 +23,7 @@ from rest_framework.routers import DefaultRouter
 from backend import urls
 apirouter = DefaultRouter()
 apirouter.register(r'faq', views.QuestionViewSet)
-apirouter.register(r'audience', views.AudienceViewSet)
+apirouter.register(r'audiences', views.AudienceViewSet)
 apirouter.register(r'poi', views.POIViewSet)
 apirouter.register(r'users', views.UserViewSet)
 apirouter.register(r'phrasebook', views.PhraseCollectionViewSet)
