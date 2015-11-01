@@ -1,5 +1,9 @@
 from django.contrib.gis.db import models
 
+class Audience(models.Model):
+    name = models.CharField(max_length=256)
+    def __str__(self):
+        return self.name
 class Question(models.Model):
     owner = models.ForeignKey('auth.User', related_name='questions')
     created = models.DateTimeField(auto_now_add=True)
@@ -7,6 +11,7 @@ class Question(models.Model):
     answer = models.CharField(max_length=200)
     language = models.CharField(max_length=2)
     county = models.IntegerField()
+    audiences = models.ManyToManyField(Audience)
 
 class POI(models.Model):
     owner = models.ForeignKey('auth.User', related_name='pois')
@@ -21,7 +26,7 @@ class PhraseCollection(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     english_phrase = models.CharField(max_length=200)
     def __str__(self):
-        return '%s' % self.english_phrase
+        return self.english_phrase
 
 class Phrase(models.Model):
     owner = models.ForeignKey('auth.User', related_name='translations')

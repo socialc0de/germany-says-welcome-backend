@@ -3,7 +3,7 @@ from backend.serializers import *
 from rest_framework import generics, viewsets
 from django.contrib.auth.models import User
 from rest_framework import permissions
-from backend.permissions import IsOwnerOrReadOnly
+from backend.permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
 from rest_framework import filters
 
 class QuestionViewSet(viewsets.ModelViewSet):
@@ -51,3 +51,8 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAdminUser,)
+
+class AudienceViewSet(viewsets.ModelViewSet):
+    queryset = Audience.objects.all()
+    serializer_class = AudienceSerializer
+    permission_classes = (IsAdminOrReadOnly,)

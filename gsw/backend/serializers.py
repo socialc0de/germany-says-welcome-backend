@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backend.models import Question, POI, Phrase, PhraseCollection
+from backend.models import Question, POI, Phrase, PhraseCollection, Audience
 from django.contrib.auth.models import User
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -17,6 +17,10 @@ class PhraseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Phrase
         fields = ('language', 'translation', 'collection')
+
+class AudienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Audience
 
 class PhraseCollectionSerializer(serializers.HyperlinkedModelSerializer):
     translations = PhraseSerializer(many=True, read_only=True)
