@@ -20,19 +20,10 @@ from django.conf.urls import include
 from rest_framework.urlpatterns import format_suffix_patterns
 from backend import views
 from rest_framework.routers import DefaultRouter
-from backend import urls
-apirouter = DefaultRouter()
-apirouter.register(r'faq', views.QuestionViewSet)
-apirouter.register(r'audience', views.AudienceViewSet)
-apirouter.register(r'poi', views.POIViewSet)
-apirouter.register(r'users', views.UserViewSet)
-apirouter.register(r'phrasebook', views.PhraseCollectionViewSet)
-apirouter.register(r'phrase', views.PhraseViewSet)
+
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^api/', include(apirouter.urls)),
-    url(r'^api/', include(urls)),
-    url(r'^api-auth/', include('rest_framework.urls',
-                               namespace='rest_framework')),
-    ]
+    url(r'^faq/by-audience/(?P<audience>[0-9]+)/$', views.QuestionByAudienceList.as_view()),
+    url(r'^faq/by-county/(?P<county>[0-9]+)/$', views.QuestionByCountyList.as_view()),
+    url(r'^poi/by-county/(?P<county>[0-9]+)/$', views.POIByCountyList.as_view()),
+]

@@ -7,18 +7,19 @@ from backend.permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
 from rest_framework import filters
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-class QuestionCountyViewSet(viewsets.ModelViewSet):
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
-    lookup_field = "county"
+class QuestionByCountyList(APIView):
+    def get(self, request, county, format=None):
+        questions = Question.objects.filter(county=county).all()
+        serializer = QuestionSerializer(questions, many=True)
+        return Response(serializer.data)
 
-class QuestionAudienceViewSet(viewsets.ModelViewSet):
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
-    lookup_field = "audiences"
+class QuestionByAudienceList(APIView):
+    def get(self, request, audience, format=None):
+        questions = Question.objects.filter(audiences=audience).all()
+        serializer = QuestionSerializer(questions, many=True)
+        return Response(serializer.data)
 
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
@@ -34,9 +35,13 @@ class POIViewSet(viewsets.ModelViewSet):
     serializer_class = POISerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly,)
-    lookup_field = "county"
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+class POIByCountyList(APIView):
+    def get(self, request, county, format=None):
+        questions = POI.objects.filter(county=county).all()
+        serializer = POISerializer(questions, many=True)
+        return Response(serializer.data)
 
 class PhraseCollectionViewSet(viewsets.ModelViewSet):
 

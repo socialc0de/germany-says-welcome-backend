@@ -12,7 +12,6 @@ class POISerializer(serializers.ModelSerializer):
         model = POI
         exclude = ('owner',)
 
-
 class PhraseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Phrase
