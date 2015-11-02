@@ -104,12 +104,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-AUTHENTICATION_BACKENDS = (
-    'social.backends.facebook.FacebookOAuth2',
-    'social.backends.google.GoogleOAuth2',
-    'social.backends.twitter.TwitterOAuth',  # OAuth1.0
-    'django.contrib.auth.backends.ModelBackend',
-)
 
 LOGIN_REDIRECT_URL = "/api/"
 
