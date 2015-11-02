@@ -20,10 +20,12 @@ from django.conf.urls import include
 from rest_framework.urlpatterns import format_suffix_patterns
 from backend import views
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views as authviews
 
 
 urlpatterns = [
     url(r'^faq/by-audience/(?P<audience>[0-9]+)/$', views.QuestionByAudienceList.as_view()),
     url(r'^faq/by-county/(?P<county>[0-9]+)/$', views.QuestionByCountyList.as_view()),
     url(r'^poi/by-county/(?P<county>[0-9]+)/$', views.POIByCountyList.as_view()),
+    url(r'^api-token-auth/', authviews.obtain_auth_token)
 ]

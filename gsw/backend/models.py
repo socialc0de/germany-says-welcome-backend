@@ -7,8 +7,8 @@ class Audience(models.Model):
 class Question(models.Model):
     owner = models.ForeignKey('auth.User', related_name='questions')
     created = models.DateTimeField(auto_now_add=True)
-    question = models.CharField(max_length=200)
-    answer = models.CharField(max_length=200)
+    question = models.CharField(max_length=500)
+    answer = models.CharField(max_length=500)
     language = models.CharField(max_length=2)
     county = models.IntegerField()
     audiences = models.ManyToManyField(Audience)
@@ -16,7 +16,7 @@ class Question(models.Model):
 class POI(models.Model):
     owner = models.ForeignKey('auth.User', related_name='pois')
     created = models.DateTimeField(auto_now_add=True)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=500)
     type = models.CharField(max_length=20)
     location = models.PointField()
     county = models.IntegerField()
