@@ -24,11 +24,10 @@ from backend import urls
 apirouter = DefaultRouter()
 apirouter.register(r'faq', views.QuestionViewSet)
 apirouter.register(r'audiences', views.AudienceViewSet)
+apirouter.register(r'categories', views.CategoryViewSet)
 apirouter.register(r'poi', views.POIViewSet)
 apirouter.register(r'users', views.UserViewSet)
-apirouter.register(r'phrasebook', views.PhraseCollectionViewSet)
-apirouter.register(r'phrase', views.PhraseViewSet)
-
+apirouter.register(r'phrasebook', views.PhraseViewSet)
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(apirouter.urls)),

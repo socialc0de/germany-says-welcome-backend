@@ -51,15 +51,6 @@ class POIByCountyList(APIView):
         serializer = POISerializer(questions, many=True)
         return Response(serializer.data)
 
-class PhraseCollectionViewSet(viewsets.ModelViewSet):
-
-    queryset = PhraseCollection.objects.all()
-    serializer_class = PhraseCollectionSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly,)
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
 class PhraseViewSet(viewsets.ModelViewSet):
     queryset = Phrase.objects.all()
     serializer_class = PhraseSerializer
@@ -67,6 +58,7 @@ class PhraseViewSet(viewsets.ModelViewSet):
                           IsOwnerOrReadOnly,)
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -76,4 +68,9 @@ class UserViewSet(viewsets.ModelViewSet):
 class AudienceViewSet(viewsets.ModelViewSet):
     queryset = Audience.objects.all()
     serializer_class = AudienceSerializer
+    permission_classes = (IsAdminOrReadOnly,)
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
     permission_classes = (IsAdminOrReadOnly,)
