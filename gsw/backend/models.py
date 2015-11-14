@@ -15,6 +15,13 @@ class Category(TranslatableModel):
     def __str__(self):
         return self.name
 
+class PhraseCategory(TranslatableModel):
+    translations = TranslatedFields(
+        name = models.CharField(max_length=256)
+    )
+    def __str__(self):
+        return self.name
+
 class Question(TranslatableModel):
     owner = models.ForeignKey('auth.User', related_name='questions')
     created = models.DateTimeField(auto_now_add=True)
@@ -39,8 +46,8 @@ class POI(TranslatableModel):
 class Phrase(TranslatableModel):
     owner = models.ForeignKey('auth.User', related_name='phrases')
     created = models.DateTimeField(auto_now_add=True)
+    category = models.ForeignKey(PhraseCategory)
+    text_id = models.CharField(max_length=200)
     translations = TranslatedFields(
         phrase = models.CharField(max_length=200)
     )
-    def __str__(self):
-        return self.phrase

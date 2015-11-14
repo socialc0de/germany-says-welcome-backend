@@ -74,3 +74,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (IsAdminOrReadOnly,)
+
+class PhraseCategoryViewSet(viewsets.ModelViewSet):
+    queryset = PhraseCategory.objects.all()
+    serializer_class = PhraseCategorySerializer
+    permission_classes = (IsAdminOrReadOnly,)
