@@ -57,8 +57,7 @@ class PhraseViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly,)
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
+        serializer.save(owner=self.request.user, text_id=self.request.data['text_id'])
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
