@@ -9,6 +9,7 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import ValidationError
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -45,6 +46,7 @@ class POIViewSet(viewsets.ModelViewSet):
                           IsOwnerOrReadOnly,)
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
 class POIByCountyList(APIView):
     def get(self, request, county, format=None):
         questions = POI.objects.filter(county=county).all()
@@ -57,7 +59,10 @@ class PhraseViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly,)
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user, text_id=self.request.data['text_id'])
+        if "." not in self.request.data['text_id'] and "/" not in self.request.data['text_id']:
+            serializer.save(owner=self.request.user, text_id=self.request.data['text_id'])
+        else:
+            raise ValidationError("Field text_id cannot contain . or /")
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
