@@ -52,6 +52,11 @@ class POIByCountyList(APIView):
         questions = POI.objects.filter(county=county).all()
         serializer = POISerializer(questions, many=True)
         return Response(serializer.data)
+class POIByAudienceList(APIView):
+    def get(self, request, audience, format=None):
+        questions = POI.objects.filter(audiences=audience).all()
+        serializer = POISerializer(questions, many=True)
+        return Response(serializer.data)
 
 class PhraseViewSet(viewsets.ModelViewSet):
     queryset = Phrase.objects.all()
