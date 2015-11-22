@@ -73,12 +73,15 @@ class AudienceViewSet(viewsets.ModelViewSet):
     queryset = Audience.objects.all()
     serializer_class = AudienceSerializer
     permission_classes = (IsAdminOrReadOnly,)
-
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+# this could be simplyfied
+class FAQCategoryViewSet(viewsets.ModelViewSet):
+    queryset = FAQCategory.objects.all()
+    serializer_class = FAQCategorySerializer
     permission_classes = (IsAdminOrReadOnly,)
-
+class POICategoryViewSet(viewsets.ModelViewSet):
+    queryset = POICategory.objects.all()
+    serializer_class = POICategorySerializer
+    permission_classes = (IsAdminOrReadOnly,)
 class PhraseCategoryViewSet(viewsets.ModelViewSet):
     queryset = PhraseCategory.objects.all()
     serializer_class = PhraseCategorySerializer

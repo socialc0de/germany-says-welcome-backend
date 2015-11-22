@@ -3,12 +3,21 @@ from hvad.models import TranslatableModel, TranslatedFields
 
 class Audience(TranslatableModel):
     translations = TranslatedFields(
+        name = models.CharField(max_length=256),
+        description = models.CharField(max_length=256)
+    )
+    def __str__(self):
+        return self.name
+
+# TODO: use a base model for all categories
+class FAQCategory(TranslatableModel):
+    translations = TranslatedFields(
         name = models.CharField(max_length=256)
     )
     def __str__(self):
         return self.name
 
-class Category(TranslatableModel):
+class POICategory(TranslatableModel):
     translations = TranslatedFields(
         name = models.CharField(max_length=256)
     )
@@ -22,12 +31,13 @@ class PhraseCategory(TranslatableModel):
     def __str__(self):
         return self.name
 
+
 class Question(TranslatableModel):
     owner = models.ForeignKey('auth.User', related_name='questions')
     created = models.DateTimeField(auto_now_add=True)
     county = models.IntegerField()
     audiences = models.ManyToManyField(Audience)
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(FAQCategory)
     translations = TranslatedFields(
         question = models.CharField(max_length=500),
         answer = models.CharField(max_length=500)
@@ -39,6 +49,8 @@ class POI(TranslatableModel):
     type = models.CharField(max_length=20)
     location = models.PointField()
     county = models.IntegerField()
+    audiences = models.ManyToManyField(Audience)
+    categories = models.ManyToManyField(POICategory)
     translations = TranslatedFields(
         description = models.CharField(max_length=500)
     )

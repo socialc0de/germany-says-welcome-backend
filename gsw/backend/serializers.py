@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backend.models import Question, POI, Phrase, Audience, Category, PhraseCategory
+from backend.models import Question, POI, Phrase, Audience, FAQCategory, POICategory, PhraseCategory
 from django.contrib.auth.models import User
 from hvad.contrib.restframework.serializers import TranslatableModelSerializer, HyperlinkedTranslatableModelSerializer, TranslationsMixin
 from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializer
@@ -27,9 +27,13 @@ class AudienceSerializer(TranslationsMixin, ModelSerializer):
     class Meta:
         model = Audience
 
-class CategorySerializer(TranslationsMixin, ModelSerializer):
+class FAQCategorySerializer(TranslationsMixin, ModelSerializer):
     class Meta:
-        model = Category
+        model = FAQCategory
+
+class POICategorySerializer(TranslationsMixin, ModelSerializer):
+    class Meta:
+        model = POICategory
 
 class PhraseCategorySerializer(TranslationsMixin, ModelSerializer):
     class Meta:
