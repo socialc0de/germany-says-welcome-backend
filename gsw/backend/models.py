@@ -58,7 +58,7 @@ class POI(TranslatableModel):
 class Phrase(TranslatableModel):
     owner = models.ForeignKey('auth.User', related_name='phrases')
     created = models.DateTimeField(auto_now_add=True)
-    category = models.ForeignKey(PhraseCategory)
+    category = models.ForeignKey(PhraseCategory, related_name='phrases')
     text_id = models.CharField(max_length=200, primary_key=True, blank=False)
     translations = TranslatedFields(
         phrase = models.CharField(max_length=200)

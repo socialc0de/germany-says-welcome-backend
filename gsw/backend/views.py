@@ -91,3 +91,9 @@ class PhraseCategoryViewSet(viewsets.ModelViewSet):
     queryset = PhraseCategory.objects.all()
     serializer_class = PhraseCategorySerializer
     permission_classes = (IsAdminOrReadOnly,)
+
+class PhraseCategoryByLanguageList(APIView):
+    def get(self, request, language, format=None):
+        categories = PhraseCategory.objects.language(language).all()
+        serializer = PhraseCategorySerializer(categories, many=True, context={'request': request})
+        return Response(serializer.data)

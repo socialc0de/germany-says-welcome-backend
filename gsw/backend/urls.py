@@ -28,5 +28,6 @@ urlpatterns = [
     url(r'^faq/by-county/(?P<county>[0-9]+)/$', views.QuestionByCountyList.as_view()),
     url(r'^poi/by-audience/(?P<audience>[0-9]+)/$', views.POIByAudienceList.as_view()),
     url(r'^poi/by-county/(?P<county>[0-9]+)/$', views.POIByCountyList.as_view()),
+    url(r'^phrasecategories/by-language/(?P<language>[a-z]+)/$', views.PhraseCategoryByLanguageList.as_view()),
     url(r'^api-token-auth/', authviews.obtain_auth_token)
 ]
