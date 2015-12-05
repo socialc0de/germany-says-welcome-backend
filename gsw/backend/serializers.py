@@ -2,7 +2,7 @@ from rest_framework import serializers
 from backend.models import Question, POI, Phrase, Audience, FAQCategory, POICategory, PhraseCategory
 from django.contrib.auth.models import User
 from hvad.contrib.restframework.serializers import TranslatableModelSerializer, HyperlinkedTranslatableModelSerializer, TranslationsMixin
-from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializer
+from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializer, ReadOnlyField
 
 
 class QuestionSerializer(TranslationsMixin, ModelSerializer):
@@ -16,6 +16,7 @@ class POISerializer(TranslationsMixin, ModelSerializer):
         exclude = ('owner',)
 
 class PhraseSerializer(TranslationsMixin, HyperlinkedModelSerializer):
+    id = ReadOnlyField()
     class Meta:
         model = Phrase
         exclude = ('owner',)
