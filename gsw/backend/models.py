@@ -46,7 +46,6 @@ class Question(TranslatableModel):
 class POI(TranslatableModel):
     owner = models.ForeignKey('auth.User', related_name='pois')
     created = models.DateTimeField(auto_now_add=True)
-    type = models.CharField(max_length=20)
     location = models.PointField()
     county = models.IntegerField()
     audiences = models.ManyToManyField(Audience)
