@@ -36,7 +36,7 @@ class POICategorySerializer(TranslationsMixin, ModelSerializer):
         model = POICategory
 
 class PhraseCategorySerializer(TranslationsMixin, ModelSerializer):
-    phrases = PhraseSerializer(many=True, read_only=True)
+    #phrases = PhraseSerializer(many=True, read_only=True)
     class Meta:
         model = PhraseCategory
 
