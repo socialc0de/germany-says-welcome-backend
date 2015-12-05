@@ -98,7 +98,7 @@ class PhraseCategoryByLanguageList(APIView):
         serializer = PhraseCategorySerializer(categories, many=True, context={'request': request})
         return Response(serializer.data)
 class PhraseByCategoryList(APIView):
-    def get(self, request, category, format=None):
-        phrases = Phrase.objects.filter(categories=category).all()
+    def get(self, request, categories, format=None):
+        phrases = Phrase.objects.filter(categories=categories).all()
         serializer = PhraseSerializer(phrases, many=True, context={'request': request})
         return Response(serializer.data)
