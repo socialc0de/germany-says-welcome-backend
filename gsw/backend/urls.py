@@ -29,6 +29,6 @@ urlpatterns = [
     url(r'^poi/by-audience/(?P<audience>[0-9]+)/$', views.POIByAudienceList.as_view()),
     url(r'^poi/by-county/(?P<county>[0-9]+)/$', views.POIByCountyList.as_view()),
     url(r'^phrasecategories/by-language/(?P<language>[a-z]+)/$', views.PhraseCategoryByLanguageList.as_view()),
-    url(r'^phrasecategories/by-category/(?P<category>[0-9]+)/$', views.PhraseCategoryByCategoryList.as_view()),
+    url(r'^phrasebook/by-category/(?P<category>[0-9]+)/$', views.PhraseByCategoryList.as_view()),
     url(r'^api-token-auth/', authviews.obtain_auth_token)
 ]
