@@ -16,7 +16,7 @@ class POISerializer(TranslationsMixin, ModelSerializer):
         exclude = ('owner',)
 
 class PhraseSerializer(TranslationsMixin, HyperlinkedModelSerializer):
-    id = ReadOnlyField()
+    #id = ReadOnlyField()
     class Meta:
         model = Phrase
         exclude = ('owner',)
