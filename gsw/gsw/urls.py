@@ -30,6 +30,7 @@ apirouter.register(r'poicategories', views.POICategoryViewSet)
 apirouter.register(r'users', views.UserViewSet)
 apirouter.register(r'phrasebook', views.PhraseViewSet)
 apirouter.register(r'phrasecategories', views.PhraseCategoryViewSet)
+apirouter.register(r'emergencynumbers', views.EmergencyNumberViewSet)
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(apirouter.urls)),

@@ -102,3 +102,9 @@ class PhraseByCategoryList(APIView):
         phrases = Phrase.objects.filter(category_id=category).all()
         serializer = PhraseSerializer(phrases, many=True, context={'request': request})
         return Response(serializer.data)
+class EmergencyNumberViewSet(viewsets.ModelViewSet):
+    queryset = EmergencyNumber.objects.all()
+    serializer_class = EmergencyNumberSerializer
+    permission_classes = (IsAdminOrReadOnly,)
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

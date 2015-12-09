@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backend.models import Question, POI, Phrase, Audience, FAQCategory, POICategory, PhraseCategory
+from backend.models import Question, POI, Phrase, Audience, FAQCategory, POICategory, PhraseCategory, EmergencyNumber
 from django.contrib.auth.models import User
 from hvad.contrib.restframework.serializers import TranslatableModelSerializer, HyperlinkedTranslatableModelSerializer, TranslationsMixin
 from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializer, ReadOnlyField
@@ -49,3 +49,8 @@ class UserSerializer(TranslationsMixin, ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'questions', 'pois', 'translations', 'phrases')
+
+class EmergencyNumberSerializer(TranslationsMixin, ModelSerializer):
+    class Meta:
+        exclude = ('owner',)
+        model = EmergencyNumber
