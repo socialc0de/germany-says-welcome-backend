@@ -9,11 +9,11 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, Throttled
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+import smtplib
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
@@ -35,7 +35,7 @@ class QuestionByCategoryList(APIView):
         questions = Question.objects.filter(audiences=audience).all()
         serializer = QuestionSerializer(questions, many=True)
         return Response(serializer.data)
-        
+
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
@@ -44,8 +44,25 @@ class QuestionViewSet(viewsets.ModelViewSet):
     search_fields = ('question',)
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-    def create(self, request):
-        print(args)
+    def create(self, request, *args, **kwargs):
+        langs = request.data['translations'].keys()
+        questions = [question_pair['question'] for question_pair in request.data['translations'].values()]
+
+        sender = 'question-sender@germany-says-welcome.de'
+        receivers = ['frage@germany-says-welcome.de']
+        message = "From: new_question@germany-says-welcome.de\n"
+        message += "To: " + ", ".join(receivers) + "\n"
+        message += "Subject: [" + " ".join(langs) + "] New Question : "+questions[0]+"\n\n"
+        message += "\n".join(questions)
+
+        try:
+           smtpObj = smtplib.SMTP('INSERT MAIL SERVER HERE')
+           smtpObj.sendmail(sender, receivers, message)         
+           return Response(request.data)
+        except smtplib.SMTPException:
+           raise Throttled("Couldn't store question")
+        
+
 
 class POIViewSet(viewsets.ModelViewSet):
     queryset = POI.objects.all()
