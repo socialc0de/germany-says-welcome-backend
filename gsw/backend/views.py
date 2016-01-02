@@ -3,7 +3,7 @@ from backend.serializers import *
 from rest_framework import generics, viewsets
 from django.contrib.auth.models import User
 from rest_framework import permissions
-from backend.permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
+from backend.permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly, PostAllowed
 from rest_framework import filters
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
@@ -52,6 +52,7 @@ class POIByCountyList(APIView):
         questions = POI.objects.filter(county=county).all()
         serializer = POISerializer(questions, many=True)
         return Response(serializer.data)
+
 class POIByAudienceList(APIView):
     def get(self, request, audience, format=None):
         questions = POI.objects.filter(audiences=audience).all()
@@ -82,7 +83,10 @@ class AudienceViewSet(viewsets.ModelViewSet):
 class FAQCategoryViewSet(viewsets.ModelViewSet):
     queryset = FAQCategory.objects.all()
     serializer_class = FAQCategorySerializer
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,PostAllowed)
+    def add(self, request, *args):
+        print(args)
+        
 class POICategoryViewSet(viewsets.ModelViewSet):
     queryset = POICategory.objects.all()
     serializer_class = POICategorySerializer

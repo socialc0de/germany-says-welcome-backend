@@ -67,6 +67,7 @@ class EmergencyNumber(TranslatableModel):
     owner = models.ForeignKey('auth.User', related_name='numbers')
     created = models.DateTimeField(auto_now_add=True)
     number = models.CharField(max_length=30, blank=False)
+    county = models.IntegerField()
     translations = TranslatedFields(
         name = models.CharField(max_length=100),
         description = models.CharField(max_length=500)
