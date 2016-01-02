@@ -9,11 +9,14 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
-from rest_framework.exceptions import ValidationError, Throttled
+from rest_framework.exceptions import ValidationError
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import smtplib
+from backend.exceptions import ServiceUnavailable
+smtp_user = "SMTP USER"
+smtp_pwd = "SMTP PASSWORD"
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
@@ -55,12 +58,22 @@ class QuestionViewSet(viewsets.ModelViewSet):
         message += "Subject: [" + " ".join(langs) + "] New Question : "+questions[0]+"\n\n"
         message += "\n".join(questions)
 
-        try:
-           smtpObj = smtplib.SMTP('INSERT MAIL SERVER HERE')
-           smtpObj.sendmail(sender, receivers, message)
-           return Response(request.data)
+        with smtplib.SMTP('YOUR MAIL SERVER WITH SUBMISSION PORT HERE') as smtpObj:
+            smtpObj.starttls()
+            smtpObj.ehlo()
+            smtpObj.login(smtp_user, smtp_pwd)
+            smtpObj.sendmail(sender, receivers, message)
+            return Response(request.data)
+        """try:
+            smtpObj = smtplib.SMTP('mail.germany-says-welcome.de')
+            smtpObj.ehlo()
+            smtpObj.starttls()
+            smtpObj.ehlo
+            smtpObj.login(smtp_user, smtp_pwd)
+            smtpObj.sendmail(sender, receivers, message)
+            return Response(request.data)
         except smtplib.SMTPException:
-           raise Throttled("Couldn't store question")
+            raise ServiceUnavailable("Couldn't store question")"""
 
 
 
