@@ -42,6 +42,13 @@ class Question(TranslatableModel):
         question = models.CharField(max_length=500),
         answer = models.CharField(max_length=500)
     )
+class UnansweredQuestion(TranslatableModel):
+    created = models.DateTimeField(auto_now_add=True)
+    county = models.IntegerField()
+    question = models.CharField(max_length=500, null=True),
+    translations = TranslatedFields(
+        question = models.CharField(max_length=500),
+    )
 
 class POI(TranslatableModel):
     owner = models.ForeignKey('auth.User', related_name='pois')

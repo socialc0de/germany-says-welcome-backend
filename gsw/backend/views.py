@@ -50,22 +50,22 @@ class QuestionViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         langs = request.data['translations'].keys()
         questions = [question_pair['question'] for question_pair in request.data['translations'].values()]
-
         sender = 'question-sender@germany-says-welcome.de'
         receivers = ['frage@germany-says-welcome.de']
         message = "From: new_question@germany-says-welcome.de\n"
         message += "To: " + ", ".join(receivers) + "\n"
         message += "Subject: [" + " ".join(langs) + "] New Question : "+questions[0]+"\n\n"
         message += "\n".join(questions)
-
-
         try:
             with smtplib.SMTP(settings.SMTP_HOST) as smtpObj:
                 smtpObj.starttls()
                 smtpObj.ehlo()
                 smtpObj.login(settings.SMTP_USER, settings.SMTP_PASS)
                 smtpObj.sendmail(sender, receivers, message)
-                return Response(request.data)
+                serializer = UnansweredQuestionSerializer(data=request.data, context={'request': request})
+                serializer.is_valid()
+                serializer.save()
+                return Response(serializer.data)
         except smtplib.SMTPException:
             raise ServiceUnavailable("Couldn't store question")
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from backend.models import Question, POI, Phrase, Audience, FAQCategory, POICategory, PhraseCategory, EmergencyNumber
+from backend.models import Question, UnansweredQuestion, POI, Phrase, Audience, FAQCategory, POICategory, PhraseCategory, EmergencyNumber
 from django.contrib.auth.models import User
 from hvad.contrib.restframework.serializers import TranslatableModelSerializer, HyperlinkedTranslatableModelSerializer, TranslationsMixin
 from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializer, ReadOnlyField
@@ -9,6 +9,9 @@ class QuestionSerializer(TranslationsMixin, ModelSerializer):
     class Meta:
         model = Question
         exclude = ('owner',)
+class UnansweredQuestionSerializer(TranslationsMixin, ModelSerializer):
+    class Meta:
+        model = UnansweredQuestion
 
 class POISerializer(TranslationsMixin, ModelSerializer):
     class Meta:
