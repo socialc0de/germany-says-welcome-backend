@@ -15,8 +15,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import smtplib
 from backend.exceptions import ServiceUnavailable
-smtp_user = "SMTP USER"
-smtp_pwd = "SMTP PASSWORD"
+from django.conf import settings
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
@@ -60,10 +60,10 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
 
         try:
-            with smtplib.SMTP('YOUR MAIL SERVER WITH SUBMISSION PORT HERE') as smtpObj:
+            with smtplib.SMTP(settings.SMTP_HOST) as smtpObj:
                 smtpObj.starttls()
                 smtpObj.ehlo()
-                smtpObj.login(smtp_user, smtp_pwd)
+                smtpObj.login(settings.SMTP_USER, settings.SMTP_PASS)
                 smtpObj.sendmail(sender, receivers, message)
                 return Response(request.data)
         except smtplib.SMTPException:
