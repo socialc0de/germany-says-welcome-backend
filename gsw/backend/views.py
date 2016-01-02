@@ -58,22 +58,16 @@ class QuestionViewSet(viewsets.ModelViewSet):
         message += "Subject: [" + " ".join(langs) + "] New Question : "+questions[0]+"\n\n"
         message += "\n".join(questions)
 
-        with smtplib.SMTP('YOUR MAIL SERVER WITH SUBMISSION PORT HERE') as smtpObj:
-            smtpObj.starttls()
-            smtpObj.ehlo()
-            smtpObj.login(smtp_user, smtp_pwd)
-            smtpObj.sendmail(sender, receivers, message)
-            return Response(request.data)
-        """try:
-            smtpObj = smtplib.SMTP('mail.germany-says-welcome.de')
-            smtpObj.ehlo()
-            smtpObj.starttls()
-            smtpObj.ehlo
-            smtpObj.login(smtp_user, smtp_pwd)
-            smtpObj.sendmail(sender, receivers, message)
-            return Response(request.data)
+
+        try:
+            with smtplib.SMTP('YOUR MAIL SERVER WITH SUBMISSION PORT HERE') as smtpObj:
+                smtpObj.starttls()
+                smtpObj.ehlo()
+                smtpObj.login(smtp_user, smtp_pwd)
+                smtpObj.sendmail(sender, receivers, message)
+                return Response(request.data)
         except smtplib.SMTPException:
-            raise ServiceUnavailable("Couldn't store question")"""
+            raise ServiceUnavailable("Couldn't store question")
 
 
 
