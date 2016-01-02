@@ -30,6 +30,12 @@ class QuestionByAudienceList(APIView):
         serializer = QuestionSerializer(questions, many=True)
         return Response(serializer.data)
 
+class QuestionByCategoryList(APIView):
+    def get(self, request, category, format=None):
+        questions = Question.objects.filter(audiences=audience).all()
+        serializer = QuestionSerializer(questions, many=True)
+        return Response(serializer.data)
+        
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
