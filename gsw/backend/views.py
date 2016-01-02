@@ -57,11 +57,11 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
         try:
            smtpObj = smtplib.SMTP('INSERT MAIL SERVER HERE')
-           smtpObj.sendmail(sender, receivers, message)         
+           smtpObj.sendmail(sender, receivers, message)
            return Response(request.data)
         except smtplib.SMTPException:
            raise Throttled("Couldn't store question")
-        
+
 
 
 class POIViewSet(viewsets.ModelViewSet):
