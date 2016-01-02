@@ -38,6 +38,8 @@ class QuestionViewSet(viewsets.ModelViewSet):
     search_fields = ('question',)
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+    def create(self, request):
+        print(args)
 
 class POIViewSet(viewsets.ModelViewSet):
     queryset = POI.objects.all()
@@ -83,10 +85,8 @@ class AudienceViewSet(viewsets.ModelViewSet):
 class FAQCategoryViewSet(viewsets.ModelViewSet):
     queryset = FAQCategory.objects.all()
     serializer_class = FAQCategorySerializer
-    permission_classes = (IsAdminOrReadOnly,PostAllowed)
-    def add(self, request, *args):
-        print(args)
-        
+    permission_classes = (IsAdminOrReadOnly,)
+
 class POICategoryViewSet(viewsets.ModelViewSet):
     queryset = POICategory.objects.all()
     serializer_class = POICategorySerializer
