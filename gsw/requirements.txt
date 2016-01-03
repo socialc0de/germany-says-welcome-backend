@@ -4,3 +4,4 @@ djangorestframework-gis
 djangorestframework
 django-cors-headers
 mysqlclient
+pillow

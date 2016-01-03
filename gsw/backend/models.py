@@ -14,6 +14,7 @@ class FAQCategory(TranslatableModel):
     translations = TranslatedFields(
         name = models.CharField(max_length=256)
     )
+    image = models.ImageField(upload_to='faq_categories')
     def __str__(self):
         return self.name
 
@@ -21,6 +22,7 @@ class POICategory(TranslatableModel):
     translations = TranslatedFields(
         name = models.CharField(max_length=256)
     )
+    icon = models.ImageField(upload_to='poi_categories')
     def __str__(self):
         return self.name
 

@@ -42,7 +42,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',  # only if you use token authentication
     'corsheaders',
     'hvad',
-    'backend'
+    'backend',
 )
 
 MIDDLEWARE_CLASSES = (
