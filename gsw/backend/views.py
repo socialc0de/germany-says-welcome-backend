@@ -58,13 +58,15 @@ class QuestionViewSet(viewsets.ModelViewSet):
         message += "\n".join(questions)
         try:
             with smtplib.SMTP(settings.SMTP_HOST) as smtpObj:
-                smtpObj.starttls()
-                smtpObj.ehlo()
-                smtpObj.login(settings.SMTP_USER, settings.SMTP_PASS)
-                smtpObj.sendmail(sender, receivers, message)
                 serializer = UnansweredQuestionSerializer(data=request.data, context={'request': request})
-                serializer.is_valid()
-                serializer.save()
+                if serializer.is_valid():
+                    smtpObj.starttls()
+                    smtpObj.ehlo()
+                    smtpObj.login(settings.SMTP_USER, settings.SMTP_PASS)
+                    smtpObj.sendmail(sender, receivers, message)
+                    serializer.save()
+                else:
+                    raise ValidationError('This data in invalid. Hint: did you send empty questions?')
                 return Response(serializer.data)
         except smtplib.SMTPException:
             raise ServiceUnavailable("Couldn't store question")
