@@ -27,6 +27,7 @@ for cat_id in faq_categories:
 	entries = FAQCategory.objects.language('all').filter(id=cat_id)
 	if len(entries) == 0:
 		entry = FAQCategory(id=cat_id)
+		entry.save()
 	for language in faq_categories[cat_id]['translations']:
 		if language in FAQCategory.objects.get(id=cat_id).get_available_languages():
 			entry = FAQCategory.objects.language(language).get(id=cat_id)
@@ -39,9 +40,9 @@ for cat_id in faq_categories:
 	with open("/tmp/%s"%image_name, "wb") as f:
 		f.write(image.content)
 	reopen = open("/tmp/%s"%image_name, "rb")
-	if entry.image != None:
+	if entry.image != "":
 		old_image = entry.image.open()
-	if reopen != None and entry.image != None and reopen.read() != old_image.read(): #slow, please replace in future
+	if reopen != None and (entry.image == "" or reopen.read() != old_image.read()): #slow, please replace in future
 		django_file = File(reopen)
 		entry.image.save(image_name, django_file)
 	entry.save()
