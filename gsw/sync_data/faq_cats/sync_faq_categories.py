@@ -27,6 +27,8 @@ for cat_id in faq_categories:
 	entries = FAQCategory.objects.language('all').filter(id=cat_id)
 	if len(entries) == 0:
 		entry = FAQCategory(id=cat_id)
+	else:
+		entry = FAQCategory.objects.language('all').get(id=cat_id)
 	image = requests.get(faq_categories[cat_id]['image_url'])
 	image_name = os.path.basename(faq_categories[cat_id]['image_url'])
 	with open("/tmp/%s"%image_name, "wb") as f:
