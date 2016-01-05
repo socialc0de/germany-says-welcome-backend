@@ -27,13 +27,6 @@ for cat_id in faq_categories:
 	entries = FAQCategory.objects.language('all').filter(id=cat_id)
 	if len(entries) == 0:
 		entry = FAQCategory(id=cat_id)
-	for language in faq_categories[cat_id]['translations']:
-		if language in FAQCategory.objects.get(id=cat_id).get_available_languages():
-			entry = FAQCategory.objects.language(language).get(id=cat_id)
-		else:
-			entry = FAQCategory.objects.get(id=cat_id).translate(language)
-		entry.name = faq_categories[cat_id]['translations'][language]['name']
-		entry.save()
 	image = requests.get(faq_categories[cat_id]['image_url'])
 	image_name = os.path.basename(faq_categories[cat_id]['image_url'])
 	with open("/tmp/%s"%image_name, "wb") as f:
@@ -44,5 +37,13 @@ for cat_id in faq_categories:
 		django_file = File(reopen)
 		entry.image.save(image_name, django_file)
 	entry.save()
+	for language in faq_categories[cat_id]['translations']:
+		if language in FAQCategory.objects.get(id=cat_id).get_available_languages():
+			entry = FAQCategory.objects.language(language).get(id=cat_id)
+		else:
+			entry = FAQCategory.objects.get(id=cat_id).translate(language)
+		entry.name = faq_categories[cat_id]['translations'][language]['name']
+		entry.save()
+
 		
 entries_to_delete.delete()
