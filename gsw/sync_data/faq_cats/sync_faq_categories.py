@@ -28,7 +28,10 @@ for cat_id in faq_categories:
 	if len(entries) == 0:
 		entry = FAQCategory(id=cat_id)
 	for language in faq_categories[cat_id]['translations']:
-		entry = FAQCategory.objects.language(language).get(id=cat_id)
+		if language in FAQCategory.objects.get(id=cat_id).get_available_languages():
+			entry = FAQCategory.objects.language(language).get(id=cat_id)
+		else:
+			entry = FAQCategory.objects.get(id=cat_id).translate(language)
 		entry.name = faq_categories[cat_id]['translations'][language]['name']
 		entry.save()
 	image = requests.get(faq_categories[cat_id]['image_url'])
