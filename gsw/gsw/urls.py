@@ -21,6 +21,8 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from backend import views
 from rest_framework.routers import DefaultRouter
 from backend import urls
+from gsw import settings
+
 apirouter = DefaultRouter()
 apirouter.register(r'audiences', views.AudienceViewSet)
 apirouter.register(r'faq', views.QuestionViewSet)
@@ -37,4 +39,5 @@ urlpatterns = [
     url(r'^api/', include(urls)),
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT, 'show_indexes': False}),
     ]
