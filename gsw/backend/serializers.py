@@ -8,7 +8,6 @@ from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializ
 class QuestionSerializer(TranslationsMixin, ModelSerializer):
     class Meta:
         model = Question
-        exclude = ('owner',)
 class UnansweredQuestionSerializer(TranslationsMixin, ModelSerializer):
     class Meta:
         model = UnansweredQuestion
@@ -16,13 +15,11 @@ class UnansweredQuestionSerializer(TranslationsMixin, ModelSerializer):
 class POISerializer(TranslationsMixin, ModelSerializer):
     class Meta:
         model = POI
-        exclude = ('owner',)
 
 class PhraseSerializer(TranslationsMixin, HyperlinkedModelSerializer):
     #id = ReadOnlyField()
     class Meta:
         model = Phrase
-        exclude = ('owner',)
         extra_kwargs = {
             'language': {'lookup_field': 'phrase__language'}
         }
@@ -55,5 +52,4 @@ class UserSerializer(TranslationsMixin, ModelSerializer):
 
 class EmergencyNumberSerializer(TranslationsMixin, ModelSerializer):
     class Meta:
-        exclude = ('owner',)
         model = EmergencyNumber

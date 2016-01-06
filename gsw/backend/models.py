@@ -37,7 +37,6 @@ class PhraseCategory(TranslatableModel):
 
 
 class Question(TranslatableModel):
-    owner = models.ForeignKey('auth.User', related_name='questions')
     created = models.DateTimeField(auto_now_add=True)
     county = models.IntegerField()
     audiences = models.ManyToManyField(Audience)
@@ -55,7 +54,6 @@ class UnansweredQuestion(TranslatableModel):
     )
 
 class POI(TranslatableModel):
-    owner = models.ForeignKey('auth.User', related_name='pois')
     created = models.DateTimeField(auto_now_add=True)
     location = models.PointField()
     county = models.IntegerField()
@@ -66,7 +64,6 @@ class POI(TranslatableModel):
     )
 
 class Phrase(TranslatableModel):
-    owner = models.ForeignKey('auth.User', related_name='phrases')
     created = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(PhraseCategory, related_name='phrases')
     text_id = models.CharField(max_length=200, primary_key=True, blank=False)
@@ -75,7 +72,6 @@ class Phrase(TranslatableModel):
     )
 
 class EmergencyNumber(TranslatableModel):
-    owner = models.ForeignKey('auth.User', related_name='numbers')
     created = models.DateTimeField(auto_now_add=True)
     number = models.CharField(max_length=30, blank=False)
     county = models.IntegerField()
