@@ -22,10 +22,10 @@ for lang in langs:
 			if lang not in questions[question['original_id']]['translations']:
 				questions[question['original_id']]['translations'][lang] = {}
 			questions[question['original_id']]['cat_ids'] = []
-			catreq = requests.get("http://dev-admin.germany-says-welcome.de/wp-json/wp/v2/faq/%s/faq_cat"%question['original_id'])
-			for cat in catreq.json():
-				questions[question['original_id']]['cat_ids'].append(cat['original_id'])
-			
+			for term in question['_links']['terms']:
+				if term['taxonomy'] == "faq_cat":
+					questions[question['original_id']]['cat_ids'] = [item['id'] for item in term['data']]
+					print(questions[question['original_id']]['cat_ids'])
 			questions[question['original_id']]['translations'][lang]['question'] = clean_wordpress_content(question['title']['rendered'])
 			questions[question['original_id']]['translations'][lang]['answer'] = clean_wordpress_content(question['content']['rendered'])
 			questions[question['original_id']]['id'] = int(question['original_id'])
@@ -47,6 +47,7 @@ for question_id in questions:
 			entry = Question.objects.get(id=question_id).translate(language)
 		entry.question = questions[question_id]['translations'][language]['question']
 		entry.answer = questions[question_id]['translations'][language]['answer']
+		entry.categories = questions[question_id]['cat_ids']
 		entry.county = questions[question_id]['county']
 		entry.audiences = questions[question_id]['audiences']
 		entry.save()
