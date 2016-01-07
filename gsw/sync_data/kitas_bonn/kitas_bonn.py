@@ -35,10 +35,9 @@ with open("kitas_bonn.geojson", encoding='latin-1') as jsonfile:
 			poi["translations"][language]['description'] = "{0}\n{1}\n{2}".format(feature['properties']['name'],feature['properties']['adresse'],feature['properties']['plzort'])
 		#poi['id'] = feature['properties']['point_id']
 		poi['county'] = county
-		poi['location'] =  {'type': 'Point', 'coordinates': []}
 		inProj = Proj(init='epsg:25832')
 		outProj = Proj(init='epsg:4326')
-		poi['location']['coordinates'] = list(transform(inProj,outProj,*feature['geometry']['coordinates']))
+		poi['location'] = "POINT({0} {1})".format(*list(transform(inProj,outProj,*feature['geometry']['coordinates'])))
 		poi['audiences'] = set([random.randint(1,3),random.randint(1,3)])
 		poi['categories'] = [category_id]
 		poi_serialized = POISerializer(data=poi)
