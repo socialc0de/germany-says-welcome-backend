@@ -3,7 +3,7 @@ from backend.serializers import *
 from rest_framework import generics, viewsets
 from django.contrib.auth.models import User
 from rest_framework import permissions
-from backend.permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly, PostAllowed
+from backend.permissions import IsAdminOrReadOnly, PostAllowed
 from rest_framework import filters
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
@@ -41,7 +41,7 @@ class QuestionByCategoryList(APIView):
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('question',)
     def perform_create(self, serializer):
@@ -76,7 +76,7 @@ class POIViewSet(viewsets.ModelViewSet):
     queryset = POI.objects.all()
     serializer_class = POISerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly,)
+                          IsAdminOrReadOnly,)
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
@@ -96,7 +96,7 @@ class PhraseViewSet(viewsets.ModelViewSet):
     queryset = Phrase.objects.all()
     serializer_class = PhraseSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly,)
+                          IsAdminOrReadOnly,)
     def perform_create(self, serializer):
         if "." not in self.request.data['text_id'] and "/" not in self.request.data['text_id']:
             serializer.save(owner=self.request.user, text_id=self.request.data['text_id'])

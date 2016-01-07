@@ -20,6 +20,7 @@ class FAQCategory(TranslatableModel):
         return self.name
 
 class POICategory(TranslatableModel):
+    text_id = models.CharField(max_length=200, blank=False)
     translations = TranslatedFields(
         name = models.CharField(max_length=256)
     )
@@ -38,7 +39,7 @@ class PhraseCategory(TranslatableModel):
 
 class Question(TranslatableModel):
     created = models.DateTimeField(auto_now_add=True)
-    county = models.IntegerField()
+    county = models.CharField(max_length=8)
     audiences = models.ManyToManyField(Audience)
     categories = models.ManyToManyField(FAQCategory)
     translations = TranslatedFields(
@@ -47,7 +48,7 @@ class Question(TranslatableModel):
     )
 class UnansweredQuestion(TranslatableModel):
     created = models.DateTimeField(auto_now_add=True)
-    county = models.IntegerField()
+    county = models.CharField(max_length=8)
     question = models.CharField(max_length=500, null=True),
     translations = TranslatedFields(
         question = models.CharField(max_length=500),
@@ -56,7 +57,7 @@ class UnansweredQuestion(TranslatableModel):
 class POI(TranslatableModel):
     created = models.DateTimeField(auto_now_add=True)
     location = models.PointField()
-    county = models.IntegerField()
+    county = models.CharField(max_length=8)
     audiences = models.ManyToManyField(Audience)
     categories = models.ManyToManyField(POICategory)
     translations = TranslatedFields(
@@ -74,7 +75,7 @@ class Phrase(TranslatableModel):
 class EmergencyNumber(TranslatableModel):
     created = models.DateTimeField(auto_now_add=True)
     number = models.CharField(max_length=30, blank=False)
-    county = models.IntegerField()
+    county = models.CharField(max_length=8)
     translations = TranslatedFields(
         name = models.CharField(max_length=100),
         description = models.CharField(max_length=500)
