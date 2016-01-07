@@ -43,7 +43,7 @@ for cat_id in faq_categories:
     if entry.image != "":
         old_image = entry.image.open()
     if reopen != None:
-        if entry.image == "" or (reopen.read() != old_image.read()): #slow, please replace in future
+        if entry.image == "" or old_image == None or (reopen.read() != old_image.read()): #slow, please replace in future
             django_file = File(reopen)
             entry.image.save(image_name, django_file)
     entry.save()
