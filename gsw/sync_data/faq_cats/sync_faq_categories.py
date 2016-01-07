@@ -42,9 +42,10 @@ for cat_id in faq_categories:
 	reopen = open("/tmp/%s"%image_name, "rb")
 	if entry.image != "":
 		old_image = entry.image.open()
-	if reopen != None and (entry.image == "" or reopen.read() != old_image.read()): #slow, please replace in future
-		django_file = File(reopen)
-		entry.image.save(image_name, django_file)
+	if reopen != None:
+		if entry.image == "" or reopen.read() != old_image.read(): #slow, please replace in future
+			django_file = File(reopen)
+			entry.image.save(image_name, django_file)
 	entry.save()
 		
 entries_to_delete.delete()
