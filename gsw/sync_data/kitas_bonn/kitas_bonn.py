@@ -43,7 +43,7 @@ with open("kitas_bonn.geojson", encoding='latin-1') as jsonfile:
 		poi['categories'] = [category_id]
 		poi_serialized = POISerializer(data=poi)
 		if poi_serialized.is_valid():
-			#poi_serialized.save()
+			poi_serialized.save()
 			print(poi_serialized)
 		else:
 			import pdb;pdb.set_trace()
