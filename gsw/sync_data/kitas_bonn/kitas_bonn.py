@@ -25,7 +25,8 @@ for language in translations:
 		category = POICategory.objects.get(id=category_id).translate(language)
 	category.name = translations[language]['name']
 	category.save()
-
+entries_to_delete = POI.objects.all()
+entries_to_delete.delete()
 with open("kitas_bonn.geojson", encoding='latin-1') as jsonfile:
 	data = json.load(jsonfile)
 	for feature in data['features']:
@@ -37,13 +38,13 @@ with open("kitas_bonn.geojson", encoding='latin-1') as jsonfile:
 		poi['county'] = county
 		inProj = Proj(init='epsg:25832')
 		outProj = Proj(init='epsg:4326')
-		poi['location'] = "POINT({0} {1})".format(*list(transform(inProj,outProj,*feature['geometry']['coordinates'])))
+		poi['location'] = "POINT({1} {0})".format(*list(transform(inProj,outProj,*feature['geometry']['coordinates'])))
 		poi['audiences'] = set([random.randint(1,3),random.randint(1,3)])
 		poi['categories'] = [category_id]
 		poi_serialized = POISerializer(data=poi)
 		if poi_serialized.is_valid():
-			poi_serialized.save()
-			#print(poi_serialized)
+			#poi_serialized.save()
+			print(poi_serialized)
 		else:
 			import pdb;pdb.set_trace()
 """
