@@ -95,6 +95,12 @@ class POIByAudienceList(APIView):
         serializer = POISerializer(questions, many=True)
         return Response(serializer.data)
 
+class POIByCategoryList(APIView):
+    def get(self, request, category, format=None):
+        questions = POI.objects.filter(categories=category).all()
+        serializer = POISerializer(questions, many=True)
+        return Response(serializer.data)
+        
 class PhraseViewSet(viewsets.ModelViewSet):
     queryset = Phrase.objects.all()
     serializer_class = PhraseSerializer
