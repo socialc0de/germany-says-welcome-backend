@@ -17,29 +17,35 @@ from django.dispatch import receiver
 import smtplib
 from backend.exceptions import ServiceUnavailable
 from django.conf import settings
+from rest_framework_extensions.mixins import CacheResponseAndETAGMixin
+from rest_framework_extensions.etag.decorators import etag
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
 class QuestionByCountyList(APIView):
+    @etag()
     def get(self, request, county, format=None):
         questions = Question.objects.filter(county=county).all()
         serializer = QuestionSerializer(questions, many=True)
         return Response(serializer.data)
 
 class QuestionByAudienceList(APIView):
+    @etag()
     def get(self, request, audience, format=None):
         questions = Question.objects.filter(audiences=audience).all()
         serializer = QuestionSerializer(questions, many=True)
         return Response(serializer.data)
 
 class QuestionByCategoryList(APIView):
+    @etag()
     def get(self, request, category, format=None):
         questions = Question.objects.filter(categories=category).all()
         serializer = QuestionSerializer(questions, many=True)
         return Response(serializer.data)
 
-class QuestionViewSet(viewsets.ModelViewSet):
+class QuestionViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     permission_classes = (PostAllowed, )
@@ -73,7 +79,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
 
 
-class POIViewSet(viewsets.ModelViewSet):
+class POIViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = POI.objects.all()
     serializer_class = POISerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
@@ -84,24 +90,27 @@ class POIViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 class POIByCountyList(APIView):
+    @etag()
     def get(self, request, county, format=None):
         questions = POI.objects.filter(county=county).all()
         serializer = POISerializer(questions, many=True)
         return Response(serializer.data)
 
 class POIByAudienceList(APIView):
+    @etag()
     def get(self, request, audience, format=None):
         questions = POI.objects.filter(audiences=audience).all()
         serializer = POISerializer(questions, many=True)
         return Response(serializer.data)
 
 class POIByCategoryList(APIView):
+    @etag()
     def get(self, request, category, format=None):
         questions = POI.objects.filter(categories=category).all()
         serializer = POISerializer(questions, many=True)
         return Response(serializer.data)
-        
-class PhraseViewSet(viewsets.ModelViewSet):
+
+class PhraseViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = Phrase.objects.all()
     serializer_class = PhraseSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
@@ -112,41 +121,43 @@ class PhraseViewSet(viewsets.ModelViewSet):
         else:
             raise ValidationError("Field text_id cannot contain . or /")
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAdminUser,)
 
-class AudienceViewSet(viewsets.ModelViewSet):
+class AudienceViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = Audience.objects.all()
     serializer_class = AudienceSerializer
     permission_classes = (IsAdminOrReadOnly,)
 # this could be simplyfied
-class FAQCategoryViewSet(viewsets.ModelViewSet):
+class FAQCategoryViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = FAQCategory.objects.all()
     serializer_class = FAQCategorySerializer
     permission_classes = (IsAdminOrReadOnly,)
 
-class POICategoryViewSet(viewsets.ModelViewSet):
+class POICategoryViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = POICategory.objects.all()
     serializer_class = POICategorySerializer
     permission_classes = (IsAdminOrReadOnly,)
-class PhraseCategoryViewSet(viewsets.ModelViewSet):
+class PhraseCategoryViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = PhraseCategory.objects.all()
     serializer_class = PhraseCategorySerializer
     permission_classes = (IsAdminOrReadOnly,)
 
 class PhraseCategoryByLanguageList(APIView):
+    @etag()
     def get(self, request, language, format=None):
         categories = PhraseCategory.objects.language(language).all()
         serializer = PhraseCategorySerializer(categories, many=True, context={'request': request})
         return Response(serializer.data)
 class PhraseByCategoryList(APIView):
+    @etag()
     def get(self, request, category, format=None):
         phrases = Phrase.objects.filter(category_id=category).all()
         serializer = PhraseSerializer(phrases, many=True, context={'request': request})
         return Response(serializer.data)
-class EmergencyNumberViewSet(viewsets.ModelViewSet):
+class EmergencyNumberViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = EmergencyNumber.objects.all()
     serializer_class = EmergencyNumberSerializer
     permission_classes = (IsAdminOrReadOnly,)

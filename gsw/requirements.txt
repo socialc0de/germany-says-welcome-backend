@@ -6,3 +6,4 @@ django-cors-headers
 mysqlclient
 pillow
 django-filter
+drf-extensions==0.3.0
