@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from rest_framework import permissions
 from backend.permissions import IsAdminOrReadOnly, PostAllowed
 from rest_framework import filters
+from rest_framework_gis.filters import InBBoxFilter
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -41,7 +42,7 @@ class QuestionByCategoryList(APIView):
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,PostAllowed)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('question',)
     def perform_create(self, serializer):
@@ -77,6 +78,8 @@ class POIViewSet(viewsets.ModelViewSet):
     serializer_class = POISerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsAdminOrReadOnly,)
+    bbox_filter_field = 'location'
+    filter_backends = (InBBoxFilter, )
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
