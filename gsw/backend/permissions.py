@@ -22,7 +22,7 @@ class PostAllowed(permissions.BasePermission):
     def has_permission(self, request, view):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
-        if request.method == "POST":
+        if request.method == "POST" or request.method in permissions.SAFE_METHODS:
             return True
         else:
             return False
