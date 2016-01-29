@@ -42,7 +42,7 @@ class QuestionByCategoryList(APIView):
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    permission_classes = (IsAdminOrReadOnly,PostAllowed)
+    permission_classes = (IsAdminOrReadOnly, PostAllowed)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('question',)
     def perform_create(self, serializer):
