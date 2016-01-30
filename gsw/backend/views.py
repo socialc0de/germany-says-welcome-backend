@@ -101,6 +101,7 @@ class POIByAudienceList(APIView):
         return Response(serializer.data)
 
 class POIByCategoryList(CacheResponseAndETAGMixin, ListAPIView):
+    bbox_filter_field = 'location'
     filter_backends = (InBBoxFilter,)
     serializer_class = POISerializer
     def get_queryset(self):
