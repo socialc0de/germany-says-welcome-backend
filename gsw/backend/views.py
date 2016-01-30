@@ -1,4 +1,3 @@
-from backend.models import Question
 from backend.serializers import *
 from rest_framework import generics, viewsets
 from django.contrib.auth.models import User
@@ -10,41 +9,52 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
-from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 import smtplib
 from backend.exceptions import ServiceUnavailable
 from django.conf import settings
 from rest_framework_extensions.mixins import CacheResponseAndETAGMixin
 from rest_framework_extensions.etag.decorators import etag
 
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
-class QuestionByCountyList(APIView):
-    @etag()
-    def get(self, request, county, format=None):
-        questions = Question.objects.filter(county=county).all()
-        serializer = QuestionSerializer(questions, many=True)
-        return Response(serializer.data)
+#own classes
+
+class FilteredListView(CacheResponseAndETAGMixin, ListAPIView):
+    model = None
+    url_field = None
+    url_model_field = None
+    def get_queryset(self):
+        assert self.model is not None, "model should not be None"
+        assert self.url_field is not None, "url_field should not be None"
+        filter_value = self.kwargs[self.url_field]
+        model_field = self.url_model_field if self.url_model_field is not None else self.url_field
+        filter_kwargs = {model_field: filter_value}
+        queryset = self.model.objects.filter(**filter_kwargs).all()
+        return queryset
+
+class QuestionFilteredListView(FilteredListView):
+    serializer_class = QuestionSerializer
+    model = Question
+
+class POIFilteredListView(FilteredListView):
+    serializer_class = POISerializer
+    model = POI
+    bbox_filter_field = 'location'
+    filter_backends = (InBBoxFilter,)
+
+# question views
+
+class QuestionByCountyList(QuestionFilteredListView):
+    url_field = "county"
+    url_model_field = "county"
 
 class QuestionByAudienceList(APIView):
-    @etag()
-    def get(self, request, audience, format=None):
-        questions = Question.objects.filter(audiences=audience).all()
-        serializer = QuestionSerializer(questions, many=True)
-        return Response(serializer.data)
+    url_field = "audience"
+    url_model_field = "audiences"
 
 class QuestionByCategoryList(APIView):
-    @etag()
-    def get(self, request, category, format=None):
-        questions = Question.objects.filter(categories=category).all()
-        serializer = QuestionSerializer(questions, many=True)
-        return Response(serializer.data)
+    url_field = "category"
+    url_model_field = "categories"
 
 class QuestionViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = Question.objects.all()
@@ -54,16 +64,18 @@ class QuestionViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     search_fields = ('question',)
     def create(self, request, *args, **kwargs):
         langs = request.data['translations'].keys()
-        questions = [question_pair['question'] for question_pair in request.data['translations'].values()]
+        questions = [question_pair['question'] for question_pair in
+            request.data['translations'].values()]
         sender = 'question-sender@germany-says-welcome.de'
         receivers = ['frage@germany-says-welcome.de']
         message = "From: new_question@germany-says-welcome.de\n"
         message += "To: " + ", ".join(receivers) + "\n"
-        message += "Subject: [" + " ".join(langs) + "] New Question : "+questions[0]+"\n\n"
+        message += "Subject: [" + " ".join(langs) + "] New Question : " + questions[0] + "\n\n"
         message += "\n".join(questions)
         try:
             with smtplib.SMTP(settings.SMTP_HOST) as smtpObj:
-                serializer = UnansweredQuestionSerializer(data=request.data, context={'request': request})
+                serializer = UnansweredQuestionSerializer(data=request.data,
+                    context={'request': request})
                 if serializer.is_valid():
                     smtpObj.starttls()
                     smtpObj.ehlo()
@@ -71,7 +83,8 @@ class QuestionViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
                     smtpObj.sendmail(sender, receivers, message)
                     serializer.save()
                 else:
-                    raise ValidationError('This data in invalid. Hint: did you send empty questions?')
+                    raise ValidationError('This data in invalid.' +
+                        'Hint: did you send empty questions?')
                 return Response(serializer.data)
         except smtplib.SMTPException:
             raise ServiceUnavailable("Couldn't store question")
@@ -86,31 +99,16 @@ class POIViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     bbox_filter_field = 'location'
     filter_backends = (InBBoxFilter, )
 
-class POIListView(CacheResponseAndETAGMixin, ListAPIView):
-    serializer_class = POISerializer
-    url_field = None
-    url_model_field = None
-    bbox_filter_field = 'location'
-    filter_backends = (InBBoxFilter,)
-    def get_queryset(self):
-        if self.url_field is not None:
-            filter_value = self.kwargs[self.url_field]
-            model_field = self.url_model_field if self.url_model_field is not None else self.url_field
-            filter_kwargs = {model_field: filter_value}
-            queryset = POI.objects.filter(**filter_kwargs).all()
-        else:
-            queryset = POI.objects.all()
-        return queryset
 
 
-class POIByCountyList(POIListView):
+class POIByCountyList(POIFilteredListView):
     url_field = "county"
 
-class POIByAudienceList(POIListView):
+class POIByAudienceList(POIFilteredListView):
     url_field = "audience"
     url_model_field = "audiences"
 
-class POIByCategoryList(POIListView):
+class POIByCategoryList(POIFilteredListView):
     url_field = "category"
     url_model_field = "categories"
 
@@ -149,18 +147,19 @@ class PhraseCategoryViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     serializer_class = PhraseCategorySerializer
     permission_classes = (IsAdminOrReadOnly,)
 
-class PhraseCategoryByLanguageList(APIView):
-    @etag()
-    def get(self, request, language, format=None):
-        categories = PhraseCategory.objects.language(language).all()
-        serializer = PhraseCategorySerializer(categories, many=True, context={'request': request})
-        return Response(serializer.data)
-class PhraseByCategoryList(APIView):
-    @etag()
-    def get(self, request, category, format=None):
-        phrases = Phrase.objects.filter(category_id=category).all()
-        serializer = PhraseSerializer(phrases, many=True, context={'request': request})
-        return Response(serializer.data)
+class PhraseCategoryByLanguageList(CacheResponseAndETAGMixin, ListAPIView):
+    serializer_class = PhraseCategorySerializer
+    def get_queryset(self):
+        language = self.kwargs['language']
+        queryset = PhraseCategory.objects.language(language).all()
+        return queryset
+class PhraseByCategoryList(FilteredListView):
+    model = Phrase
+    serializer_class = PhraseSerializer
+    url_field = "category"
+    url_model_field = "category_id"
+
+
 class EmergencyNumberViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = EmergencyNumber.objects.all()
     serializer_class = EmergencyNumberSerializer
