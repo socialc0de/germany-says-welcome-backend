@@ -133,19 +133,28 @@ class AudienceViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     serializer_class = AudienceSerializer
     permission_classes = (IsAdminOrReadOnly,)
 # this could be simplyfied
-class FAQCategoryViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
-    queryset = FAQCategory.objects.all()
-    serializer_class = FAQCategorySerializer
+class CategoryViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
+    category_name = None
 
-class POICategoryViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
-    queryset = POICategory.objects.all()
-    serializer_class = POICategorySerializer
-    permission_classes = (IsAdminOrReadOnly,)
-class PhraseCategoryViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
-    queryset = PhraseCategory.objects.all()
-    serializer_class = PhraseCategorySerializer
-    permission_classes = (IsAdminOrReadOnly,)
+    def get_queryset(self):
+        assert self.category_name is not None, "You need to override category_name"
+        category = globals()[category_name]
+        queryset = category.objects.all()
+        return queryset
+
+    def get_serializer_class(selff):
+        serializer_name = "%sSerializer" % category_name
+        return globals()[serializer_name]
+
+class FAQCategoryViewSet(CategoryViewSet):
+    category_name = "FAQ"
+
+class POICategoryViewSet(CategoryViewSet):
+    category_name = "POI"
+
+class PhraseCategoryViewSet(CategoryViewSet):
+    category_name = "Phrase"
 
 class PhraseCategoryByLanguageList(CacheResponseAndETAGMixin, ListAPIView):
     serializer_class = PhraseCategorySerializer
@@ -153,6 +162,7 @@ class PhraseCategoryByLanguageList(CacheResponseAndETAGMixin, ListAPIView):
         language = self.kwargs['language']
         queryset = PhraseCategory.objects.language(language).all()
         return queryset
+
 class PhraseByCategoryList(FilteredListView):
     model = Phrase
     serializer_class = PhraseSerializer
