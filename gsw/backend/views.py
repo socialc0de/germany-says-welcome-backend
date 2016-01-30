@@ -86,28 +86,33 @@ class POIViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     bbox_filter_field = 'location'
     filter_backends = (InBBoxFilter, )
 
-class POIByCountyList(APIView):
-    @etag()
-    def get(self, request, county, format=None):
-        questions = POI.objects.filter(county=county).all()
-        serializer = POISerializer(questions, many=True)
-        return Response(serializer.data)
-
-class POIByAudienceList(APIView):
-    @etag()
-    def get(self, request, audience, format=None):
-        questions = POI.objects.filter(audiences=audience).all()
-        serializer = POISerializer(questions, many=True)
-        return Response(serializer.data)
-
-class POIByCategoryList(CacheResponseAndETAGMixin, ListAPIView):
+class POIListView(CacheResponseAndETAGMixin, ListAPIView):
+    serializer_class = POISerializer
+    url_field = None
+    url_model_field = None
     bbox_filter_field = 'location'
     filter_backends = (InBBoxFilter,)
-    serializer_class = POISerializer
     def get_queryset(self):
-        category = self.kwargs['category']
-        queryset = POI.objects.filter(categories=category).all()
+        if self.url_field is not None:
+            filter_value = self.kwargs[self.url_field]
+            model_field = self.url_model_field if self.url_model_field is not None else self.url_field
+            filter_kwargs = {model_field: filter_value}
+            queryset = POI.objects.filter(**filter_kwargs).all()
+        else:
+            queryset = POI.objects.all()
         return queryset
+
+
+class POIByCountyList(POIListView):
+    url_field = "county"
+
+class POIByAudienceList(POIListView):
+    url_field = "audience"
+    url_model_field = "audiences"
+
+class POIByCategoryList(POIListView):
+    url_field = "category"
+    url_model_field = "categories"
 
 class PhraseViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = Phrase.objects.all()
