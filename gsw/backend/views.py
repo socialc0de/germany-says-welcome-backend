@@ -100,6 +100,7 @@ class POIByAudienceList(APIView):
         return Response(serializer.data)
 
 class POIByCategoryList(APIView):
+    filter_backends = (InBBoxFilter,)
     @etag()
     def get(self, request, category, format=None):
         questions = POI.objects.filter(categories=category).all()
