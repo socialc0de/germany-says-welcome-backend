@@ -1,6 +1,18 @@
 from django.contrib.gis.db import models
 from hvad.models import TranslatableModel, TranslatedFields
 
+
+#own classes
+class GSWCategory(TranslatableModel):
+    translations = TranslatedFields(
+        name = models.CharField(max_length=256)
+    )
+    def __str__(self):
+        return self.name
+    class Meta:
+        abstract = True
+
+
 class Audience(TranslatableModel):
     translations = TranslatedFields(
         name = models.CharField(max_length=256),
@@ -9,32 +21,18 @@ class Audience(TranslatableModel):
     def __str__(self):
         return self.name
 
-# TODO: use a base model for all categories
-class FAQCategory(TranslatableModel):
-    translations = TranslatedFields(
-        name = models.CharField(max_length=256)
-    )
+
+class FAQCategory(GSWCategory):
     image = models.ImageField(upload_to='./', null=True)
-    #image = models.CharField(max_length=256)
-    def __str__(self):
-        return self.name
+    translations = TranslatedFields()
 
-class POICategory(TranslatableModel):
+class POICategory(GSWCategory):
     text_id = models.CharField(max_length=200, blank=False)
-    translations = TranslatedFields(
-        name = models.CharField(max_length=256)
-    )
     icon = models.ImageField(upload_to='./', null=True)
-    #name = models.CharField(max_length=256)
-    def __str__(self):
-        return self.name
+    translations = TranslatedFields()
 
-class PhraseCategory(TranslatableModel):
-    translations = TranslatedFields(
-        name = models.CharField(max_length=256)
-    )
-    def __str__(self):
-        return self.name
+class PhraseCategory(GSWCategory):
+    translations = TranslatedFields()
 
 
 class Question(TranslatableModel):
