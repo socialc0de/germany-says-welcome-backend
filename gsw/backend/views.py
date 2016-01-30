@@ -51,8 +51,6 @@ class QuestionViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     permission_classes = (PostAllowed, )
     filter_backends = (filters.SearchFilter,)
     search_fields = ('question',)
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
     def create(self, request, *args, **kwargs):
         langs = request.data['translations'].keys()
         questions = [question_pair['question'] for question_pair in request.data['translations'].values()]
@@ -86,8 +84,6 @@ class POIViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
                           IsAdminOrReadOnly,)
     bbox_filter_field = 'location'
     filter_backends = (InBBoxFilter, )
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
 
 class POIByCountyList(APIView):
     @etag()
@@ -117,7 +113,7 @@ class PhraseViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
                           IsAdminOrReadOnly,)
     def perform_create(self, serializer):
         if "." not in self.request.data['text_id'] and "/" not in self.request.data['text_id']:
-            serializer.save(owner=self.request.user, text_id=self.request.data['text_id'])
+            serializer.save(text_id=self.request.data['text_id'])
         else:
             raise ValidationError("Field text_id cannot contain . or /")
 
@@ -161,5 +157,3 @@ class EmergencyNumberViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = EmergencyNumber.objects.all()
     serializer_class = EmergencyNumberSerializer
     permission_classes = (IsAdminOrReadOnly,)
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
