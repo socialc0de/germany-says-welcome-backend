@@ -99,13 +99,13 @@ class POIByAudienceList(APIView):
         serializer = POISerializer(questions, many=True)
         return Response(serializer.data)
 
-class POIByCategoryList(APIView):
+class POIByCategoryList(CacheResponseAndETAGMixin, APIView):
     filter_backends = (InBBoxFilter,)
-    @etag()
-    def get(self, request, category, format=None):
-        questions = POI.objects.filter(categories=category).all()
-        serializer = POISerializer(questions, many=True)
-        return Response(serializer.data)
+    serializer_class = POISerializer
+    def get_queryset(self):
+        category = self.kwargs['category']
+        queryset = POI.objects.filter(categories=category).all()
+        return queryset
 
 class PhraseViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = Phrase.objects.all()
