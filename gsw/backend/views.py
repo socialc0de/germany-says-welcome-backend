@@ -20,28 +20,45 @@ from rest_framework_extensions.etag.decorators import etag
 #own classes
 
 class FilteredListView(CacheResponseAndETAGMixin, ListAPIView):
-    model = None
+    model_class = None
     url_field = None
     url_model_field = None
+
     def get_queryset(self):
-        assert self.model is not None, "model should not be None"
-        assert self.url_field is not None, "url_field should not be None"
+        assert self.model_class is not None, "You need to override model_class."
+        assert self.url_field is not None, "You need to override url_field."
+        assert self.url_model_field is not None, "You need to override url_model_field."
+
         filter_value = self.kwargs[self.url_field]
         model_field = self.url_model_field if self.url_model_field is not None else self.url_field
         filter_kwargs = {model_field: filter_value}
-        queryset = self.model.objects.filter(**filter_kwargs).all()
+        queryset = self.model_class.objects.filter(**filter_kwargs).all()
         return queryset
 
 class QuestionFilteredListView(FilteredListView):
     serializer_class = QuestionSerializer
-    model = Question
+    model_class = Question
 
 class POIFilteredListView(FilteredListView):
     serializer_class = POISerializer
-    model = POI
+    model_class = POI
     bbox_filter_field = 'location'
     filter_backends = (InBBoxFilter,)
 
+class GSWDefaultViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
+    model_class = None
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsAdminOrReadOnly,)
+
+    def get_queryset(self):
+        assert self.model_class is not None, "You need to override model_class"
+        queryset = self.model_class.objects.all()
+        return queryset
+
+    def get_serializer_class(self):
+        assert self.model_class is not None, "You need to override model_class"
+        serializer_name = "%sSerializer" % self.model_class.__name__
+        return globals()[serializer_name]
 # question views
 
 class QuestionByCountyList(QuestionFilteredListView):
@@ -89,17 +106,11 @@ class QuestionViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
         except smtplib.SMTPException:
             raise ServiceUnavailable("Couldn't store question")
 
-
-
-class POIViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
-    queryset = POI.objects.all()
-    serializer_class = POISerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsAdminOrReadOnly,)
+# poi views
+class POIViewSet(GSWDefaultViewSet):
+    model_class = POI
     bbox_filter_field = 'location'
     filter_backends = (InBBoxFilter, )
-
-
 
 class POIByCountyList(POIFilteredListView):
     url_field = "county"
@@ -112,49 +123,29 @@ class POIByCategoryList(POIFilteredListView):
     url_field = "category"
     url_model_field = "categories"
 
-class PhraseViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
-    queryset = Phrase.objects.all()
-    serializer_class = PhraseSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsAdminOrReadOnly,)
+class PhraseViewSet(GSWDefaultViewSet):
+    model_class = Phrase
     def perform_create(self, serializer):
         if "." not in self.request.data['text_id'] and "/" not in self.request.data['text_id']:
             serializer.save(text_id=self.request.data['text_id'])
         else:
             raise ValidationError("Field text_id cannot contain . or /")
 
-class UserViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class UserViewSet(GSWDefaultViewSet):
+    model_class = User
     permission_classes = (permissions.IsAdminUser,)
 
-class AudienceViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
-    queryset = Audience.objects.all()
-    serializer_class = AudienceSerializer
-    permission_classes = (IsAdminOrReadOnly,)
-# this could be simplyfied
-class CategoryViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
-    permission_classes = (IsAdminOrReadOnly,)
-    category_name = None
+class AudienceViewSet(GSWDefaultViewSet):
+    model_class = Audience
 
-    def get_queryset(self):
-        assert self.category_name is not None, "You need to override category_name"
-        category = globals()[self.category_name]
-        queryset = category.objects.all()
-        return queryset
+class FAQCategoryViewSet(GSWDefaultViewSet):
+    model_class = FAQCategory
 
-    def get_serializer_class(self):
-        serializer_name = "%sSerializer" % self.category_name
-        return globals()[serializer_name]
+class POICategoryViewSet(GSWDefaultViewSet):
+    model_class = POICategory
 
-class FAQCategoryViewSet(CategoryViewSet):
-    category_name = "FAQCategory"
-
-class POICategoryViewSet(CategoryViewSet):
-    category_name = "POICategory"
-
-class PhraseCategoryViewSet(CategoryViewSet):
-    category_name = "PhraseCategory"
+class PhraseCategoryViewSet(GSWDefaultViewSet):
+    model_class = PhraseCategory
 
 class PhraseCategoryByLanguageList(CacheResponseAndETAGMixin, ListAPIView):
     serializer_class = PhraseCategorySerializer
@@ -164,13 +155,11 @@ class PhraseCategoryByLanguageList(CacheResponseAndETAGMixin, ListAPIView):
         return queryset
 
 class PhraseByCategoryList(FilteredListView):
-    model = Phrase
+    model_class = Phrase
     serializer_class = PhraseSerializer
     url_field = "category"
     url_model_field = "category_id"
 
 
-class EmergencyNumberViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
-    queryset = EmergencyNumber.objects.all()
-    serializer_class = EmergencyNumberSerializer
-    permission_classes = (IsAdminOrReadOnly,)
+class EmergencyNumberViewSet(GSWDefaultViewSet):
+    model_class = EmergencyNumber

@@ -19,19 +19,19 @@ from django.conf.urls import include
 
 from rest_framework.urlpatterns import format_suffix_patterns
 from backend import views
-from rest_framework.routers import DefaultRouter
+from backend.routers import GSWDefaultRouter
 from backend import urls
 from gsw import settings
 
-apirouter = DefaultRouter()
+apirouter = GSWDefaultRouter()
 apirouter.register(r'audiences', views.AudienceViewSet)
 apirouter.register(r'faq', views.QuestionViewSet)
-apirouter.register(r'faqcategories', views.FAQCategoryViewSet, base_name = "faqcategories")
+apirouter.register(r'faqcategories', views.FAQCategoryViewSet)
 apirouter.register(r'poi', views.POIViewSet)
-apirouter.register(r'poicategories', views.POICategoryViewSet, base_name = "poicategories")
+apirouter.register(r'poicategories', views.POICategoryViewSet)
 apirouter.register(r'users', views.UserViewSet)
 apirouter.register(r'phrasebook', views.PhraseViewSet)
-apirouter.register(r'phrasecategories', views.PhraseCategoryViewSet, base_name = "phrasecategories")
+apirouter.register(r'phrasecategories', views.PhraseCategoryViewSet)
 apirouter.register(r'emergencynumbers', views.EmergencyNumberViewSet)
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
