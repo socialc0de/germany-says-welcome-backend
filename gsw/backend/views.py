@@ -17,8 +17,8 @@ from django.conf import settings
 from rest_framework_extensions.mixins import CacheResponseAndETAGMixin
 from rest_framework_extensions.etag.decorators import etag
 
-#own classes
 
+#own classes
 class FilteredListView(CacheResponseAndETAGMixin, ListAPIView):
     model_class = None
     url_field = None
@@ -35,15 +35,18 @@ class FilteredListView(CacheResponseAndETAGMixin, ListAPIView):
         queryset = self.model_class.objects.filter(**filter_kwargs).all()
         return queryset
 
+
 class QuestionFilteredListView(FilteredListView):
     serializer_class = QuestionSerializer
     model_class = Question
+
 
 class POIFilteredListView(FilteredListView):
     serializer_class = POISerializer
     model_class = POI
     bbox_filter_field = 'location'
     filter_backends = (InBBoxFilter,)
+
 
 class GSWDefaultViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     model_class = None
@@ -59,19 +62,49 @@ class GSWDefaultViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
         assert self.model_class is not None, "You need to override model_class"
         serializer_name = "%sSerializer" % self.model_class.__name__
         return globals()[serializer_name]
-# question views
 
-class QuestionByCountyList(QuestionFilteredListView):
-    url_field = "county"
-    url_model_field = "county"
 
-class QuestionByAudienceList(APIView):
-    url_field = "audience"
-    url_model_field = "audiences"
+#view sets
+class PhraseViewSet(GSWDefaultViewSet):
+    model_class = Phrase
 
-class QuestionByCategoryList(APIView):
-    url_field = "category"
-    url_model_field = "categories"
+    def perform_create(self, serializer):
+        if "." not in self.request.data['text_id'] and "/" not in self.request.data['text_id']:
+            serializer.save(text_id=self.request.data['text_id'])
+        else:
+            raise ValidationError("Field text_id cannot contain . or /")
+
+
+class UserViewSet(GSWDefaultViewSet):
+    model_class = User
+    permission_classes = (permissions.IsAdminUser,)
+
+
+class AudienceViewSet(GSWDefaultViewSet):
+    model_class = Audience
+
+
+class FAQCategoryViewSet(GSWDefaultViewSet):
+    model_class = FAQCategory
+
+
+class POICategoryViewSet(GSWDefaultViewSet):
+    model_class = POICategory
+
+
+class PhraseCategoryViewSet(GSWDefaultViewSet):
+    model_class = PhraseCategory
+
+
+class EmergencyNumberViewSet(GSWDefaultViewSet):
+    model_class = EmergencyNumber
+
+
+class POIViewSet(GSWDefaultViewSet):
+    model_class = POI
+    bbox_filter_field = 'location'
+    filter_backends = (InBBoxFilter, )
+
 
 class QuestionViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     queryset = Question.objects.all()
@@ -79,6 +112,7 @@ class QuestionViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
     permission_classes = (PostAllowed, )
     filter_backends = (filters.SearchFilter,)
     search_fields = ('question',)
+
     def create(self, request, *args, **kwargs):
         langs = request.data['translations'].keys()
         questions = [question_pair['question'] for question_pair in
@@ -106,60 +140,51 @@ class QuestionViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
         except smtplib.SMTPException:
             raise ServiceUnavailable("Couldn't store question")
 
-# poi views
-class POIViewSet(GSWDefaultViewSet):
-    model_class = POI
-    bbox_filter_field = 'location'
-    filter_backends = (InBBoxFilter, )
 
+# listviews
+# questions listviews
+class QuestionByCountyList(QuestionFilteredListView):
+    url_field = "county"
+    url_model_field = "county"
+
+
+class QuestionByAudienceList(APIView):
+    url_field = "audience"
+    url_model_field = "audiences"
+
+
+class QuestionByCategoryList(APIView):
+    url_field = "category"
+    url_model_field = "categories"
+
+
+# poi listviews
 class POIByCountyList(POIFilteredListView):
     url_field = "county"
+
 
 class POIByAudienceList(POIFilteredListView):
     url_field = "audience"
     url_model_field = "audiences"
 
+
 class POIByCategoryList(POIFilteredListView):
     url_field = "category"
     url_model_field = "categories"
 
-class PhraseViewSet(GSWDefaultViewSet):
-    model_class = Phrase
-    def perform_create(self, serializer):
-        if "." not in self.request.data['text_id'] and "/" not in self.request.data['text_id']:
-            serializer.save(text_id=self.request.data['text_id'])
-        else:
-            raise ValidationError("Field text_id cannot contain . or /")
 
-class UserViewSet(GSWDefaultViewSet):
-    model_class = User
-    permission_classes = (permissions.IsAdminUser,)
-
-class AudienceViewSet(GSWDefaultViewSet):
-    model_class = Audience
-
-class FAQCategoryViewSet(GSWDefaultViewSet):
-    model_class = FAQCategory
-
-class POICategoryViewSet(GSWDefaultViewSet):
-    model_class = POICategory
-
-class PhraseCategoryViewSet(GSWDefaultViewSet):
-    model_class = PhraseCategory
-
+# phrase listviews
 class PhraseCategoryByLanguageList(CacheResponseAndETAGMixin, ListAPIView):
     serializer_class = PhraseCategorySerializer
+
     def get_queryset(self):
         language = self.kwargs['language']
         queryset = PhraseCategory.objects.language(language).all()
         return queryset
+
 
 class PhraseByCategoryList(FilteredListView):
     model_class = Phrase
     serializer_class = PhraseSerializer
     url_field = "category"
     url_model_field = "category_id"
-
-
-class EmergencyNumberViewSet(GSWDefaultViewSet):
-    model_class = EmergencyNumber
