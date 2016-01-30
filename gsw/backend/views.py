@@ -139,22 +139,22 @@ class CategoryViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         assert self.category_name is not None, "You need to override category_name"
-        category = globals()[category_name]
+        category = globals()[self.category_name]
         queryset = category.objects.all()
         return queryset
 
-    def get_serializer_class(selff):
-        serializer_name = "%sSerializer" % category_name
+    def get_serializer_class(self):
+        serializer_name = "%sSerializer" % self.category_name
         return globals()[serializer_name]
 
 class FAQCategoryViewSet(CategoryViewSet):
-    category_name = "FAQ"
+    category_name = "FAQCategory"
 
 class POICategoryViewSet(CategoryViewSet):
-    category_name = "POI"
+    category_name = "POICategory"
 
 class PhraseCategoryViewSet(CategoryViewSet):
-    category_name = "Phrase"
+    category_name = "PhraseCategory"
 
 class PhraseCategoryByLanguageList(CacheResponseAndETAGMixin, ListAPIView):
     serializer_class = PhraseCategorySerializer
