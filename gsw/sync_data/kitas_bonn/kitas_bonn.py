@@ -47,27 +47,3 @@ with open("kitas_bonn.geojson", encoding='latin-1') as jsonfile:
 			print(poi_serialized)
 		else:
 			import pdb;pdb.set_trace()
-"""
-entries_to_delete = Question.objects.all()
-for question_id in questions:
-	entries_to_delete = entries_to_delete.exclude(id=question_id)
-	entries = Question.objects.language('all').filter(id=question_id)
-	if len(entries) == 0:
-		entry = Question(id=question_id)
-		entry.county = questions[question_id]['county']
-		entry.audiences = []
-		entry.save()
-	for language in questions[question_id]['translations']:
-		if language in Question.objects.get(id=question_id).get_available_languages():
-			entry = Question.objects.language(language).get(id=question_id)
-		else:
-			entry = Question.objects.get(id=question_id).translate(language)
-		entry.question = questions[question_id]['translations'][language]['question']
-		entry.answer = questions[question_id]['translations'][language]['answer']
-		entry.categories = questions[question_id]['cat_ids']
-		entry.county = questions[question_id]['county']
-		entry.audiences = questions[question_id]['audiences']
-		entry.save()
-		
-entries_to_delete.delete()
-"""

@@ -36,7 +36,7 @@ with open("kitas.csv", encoding='latin-1') as csvfile:
                 continue
             else:
                 data = data[0]
-            if 'county' in data['adress'] and data['address']['county'] in gemeinden:
+            if 'county' in data['address'] and data['address']['county'] in gemeinden:
                 county = gemeinden[data['address']['county']]
             else:
                 print("No county id for %s"%data['address']['county'])
