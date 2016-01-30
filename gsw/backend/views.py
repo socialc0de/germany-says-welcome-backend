@@ -99,7 +99,7 @@ class POIByAudienceList(APIView):
         serializer = POISerializer(questions, many=True)
         return Response(serializer.data)
 
-class POIByCategoryList(CacheResponseAndETAGMixin, APIView):
+class POIByCategoryList(CacheResponseAndETAGMixin, ListAPIView):
     filter_backends = (InBBoxFilter,)
     serializer_class = POISerializer
     def get_queryset(self):
