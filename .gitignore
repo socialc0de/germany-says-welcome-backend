@@ -96,4 +96,8 @@ pip-selfcheck.json
 *.pyc
 __pycache__/
 local_settings.py
+migrations/
 
+### GSW ###
+gsw/static/
+gsw/media/

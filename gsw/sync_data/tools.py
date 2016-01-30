@@ -1,5 +1,7 @@
 import csv
 from backend.models import POI, POICategory
+
+
 def load_gemeinden():
 	gemeinden = {}
 	with open("../gemeinden.csv", encoding="utf-8") as csvfile:
@@ -8,7 +10,11 @@ def load_gemeinden():
 			gemeindename = row[1].split(",")[0]
 			gemeinden[gemeindename] = row[0]
 	return gemeinden
+
+
 gemeinden = load_gemeinden()
+
+
 def get_or_create_category(textid, translations):
 	categories = POICategory.objects.language('all').filter(text_id=textid)
 	if len(categories) == 0:

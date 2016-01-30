@@ -20,7 +20,6 @@ from django.conf.urls import include
 from rest_framework.urlpatterns import format_suffix_patterns
 from backend import views
 from rest_framework.routers import DefaultRouter
-from rest_framework.authtoken import views as authviews
 
 
 urlpatterns = [
@@ -32,5 +31,4 @@ urlpatterns = [
     url(r'^poi/by-category/(?P<category>[0-9]+)/$', views.POIByCategoryList.as_view()),
     url(r'^phrasecategories/by-language/(?P<language>[a-z]+)/$', views.PhraseCategoryByLanguageList.as_view()),
     url(r'^phrasebook/by-category/(?P<category>[0-9]+)/$', views.PhraseByCategoryList.as_view()),
-    url(r'^api-token-auth/', authviews.obtain_auth_token)
 ]

@@ -8,13 +8,17 @@ from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializ
 class QuestionSerializer(TranslationsMixin, ModelSerializer):
     class Meta:
         model = Question
+
+
 class UnansweredQuestionSerializer(TranslationsMixin, ModelSerializer):
     class Meta:
         model = UnansweredQuestion
 
+
 class POISerializer(TranslationsMixin, ModelSerializer):
     class Meta:
         model = POI
+
 
 class PhraseSerializer(TranslationsMixin, HyperlinkedModelSerializer):
     #id = ReadOnlyField()
@@ -24,22 +28,26 @@ class PhraseSerializer(TranslationsMixin, HyperlinkedModelSerializer):
             'language': {'lookup_field': 'phrase__language'}
         }
 
+
 class AudienceSerializer(TranslationsMixin, ModelSerializer):
     class Meta:
         model = Audience
+
 
 class FAQCategorySerializer(TranslationsMixin, ModelSerializer):
     class Meta:
         model = FAQCategory
 
+
 class POICategorySerializer(TranslationsMixin, ModelSerializer):
     class Meta:
         model = POICategory
 
+
 class PhraseCategorySerializer(TranslationsMixin, ModelSerializer):
-    #phrases = PhraseSerializer(many=True, read_only=True)
     class Meta:
         model = PhraseCategory
+
 
 class UserSerializer(TranslationsMixin, ModelSerializer):
     questions = serializers.PrimaryKeyRelatedField(many=True, queryset=Question.objects.all())
@@ -49,6 +57,7 @@ class UserSerializer(TranslationsMixin, ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'questions', 'pois', 'translations', 'phrases')
+
 
 class EmergencyNumberSerializer(TranslationsMixin, ModelSerializer):
     class Meta:
