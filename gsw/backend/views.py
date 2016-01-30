@@ -9,6 +9,7 @@ from rest_framework_gis.filters import InBBoxFilter
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
