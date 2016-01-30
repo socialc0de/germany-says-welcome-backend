@@ -39,7 +39,7 @@ with open("kitas.csv", encoding='latin-1') as csvfile:
             if 'county' in data['address'] and data['address']['county'] in gemeinden:
                 county = gemeinden[data['address']['county']]
             else:
-                print("No county id for %s"%data['address']['county'])
+                print("No county id for %s"%row[0])
                 csvwriter.writerow(row)
                 county = "05111000"
             poi = {"translations":{}}
