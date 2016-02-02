@@ -20,7 +20,7 @@ class POISerializer(TranslationsMixin, ModelSerializer):
         model = POI
 
 
-class PhraseSerializer(TranslationsMixin, HyperlinkedModelSerializer):
+class PhraseSerializer(TranslationsMixin, ModelSerializer):
     #id = ReadOnlyField()
     class Meta:
         model = Phrase
