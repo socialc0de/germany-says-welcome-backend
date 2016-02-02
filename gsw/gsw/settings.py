@@ -39,7 +39,6 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'rest_framework',
     'rest_framework_gis',
-    'rest_framework.authtoken',  # only if you use token authentication
     'corsheaders',
     'hvad',
     'backend',
@@ -104,7 +103,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-
 
 LOGIN_REDIRECT_URL = "/api/"
 

@@ -27,4 +27,7 @@ class PostAllowed(permissions.BasePermission):
         else:
             return False
     def has_object_permission(self, request, view):
-        return False
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        else:
+            return False
