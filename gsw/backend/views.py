@@ -148,12 +148,12 @@ class QuestionByCountyList(QuestionFilteredListView):
     url_model_field = "county"
 
 
-class QuestionByAudienceList(APIView):
+class QuestionByAudienceList(QuestionFilteredListView):
     url_field = "audience"
     url_model_field = "audiences"
 
 
-class QuestionByCategoryList(APIView):
+class QuestionByCategoryList(QuestionFilteredListView):
     url_field = "category"
     url_model_field = "categories"
 

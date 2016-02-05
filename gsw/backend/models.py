@@ -36,7 +36,6 @@ class PhraseCategory(GSWCategory):
 
 
 class Question(TranslatableModel):
-    created = models.DateTimeField(auto_now_add=True)
     county = models.CharField(max_length=8)
     audiences = models.ManyToManyField(Audience)
     categories = models.ManyToManyField(FAQCategory)
@@ -45,7 +44,6 @@ class Question(TranslatableModel):
         answer = models.CharField(max_length=500)
     )
 class UnansweredQuestion(TranslatableModel):
-    created = models.DateTimeField(auto_now_add=True)
     county = models.CharField(max_length=8)
     question = models.CharField(max_length=500, null=True),
     translations = TranslatedFields(
@@ -53,7 +51,6 @@ class UnansweredQuestion(TranslatableModel):
     )
 
 class POI(TranslatableModel):
-    created = models.DateTimeField(auto_now_add=True)
     location = models.PointField()
     county = models.CharField(max_length=8)
     audiences = models.ManyToManyField(Audience)
@@ -63,7 +60,6 @@ class POI(TranslatableModel):
     )
 
 class Phrase(TranslatableModel):
-    created = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(PhraseCategory, related_name='phrases')
     text_id = models.CharField(max_length=200, primary_key=True, blank=False)
     translations = TranslatedFields(
@@ -71,7 +67,6 @@ class Phrase(TranslatableModel):
     )
 
 class EmergencyNumber(TranslatableModel):
-    created = models.DateTimeField(auto_now_add=True)
     number = models.CharField(max_length=30, blank=False)
     county = models.CharField(max_length=8)
     translations = TranslatedFields(
