@@ -22,14 +22,14 @@ for lang in langs:
 			if lang not in questions[question['original_id']]['translations']:
 				questions[question['original_id']]['translations'][lang] = {}
 			questions[question['original_id']]['cat_ids'] = []
+			questions[question['original_id']]['county'] = "000000000"
 			for term in question['_links']['terms']:
-				if term['taxonomy'] == "faq_cat":
-					questions[question['original_id']]['cat_ids'] = [item['id'] for item in term['data']]
-					print(questions[question['original_id']]['cat_ids'])
+				if term['taxonomy'] == "emergency_county":
+					questions[question['original_id']]['county'] = [item['name'] for item in term['data']][0]
+					#print(questions[question['original_id']]['cat_ids'])
 			questions[question['original_id']]['translations'][lang]['question'] = clean_wordpress_content(question['title']['rendered'])
 			questions[question['original_id']]['translations'][lang]['answer'] = clean_wordpress_content(question['content']['rendered'])
 			questions[question['original_id']]['id'] = int(question['original_id'])
-			questions[question['original_id']]['county'] = 5
 			questions[question['original_id']]['number'] = question['number']
 entries_to_delete = EmergencyNumber.objects.all()
 for question_id in questions:
