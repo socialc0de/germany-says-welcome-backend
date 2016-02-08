@@ -3,7 +3,6 @@ django-hvad
 djangorestframework-gis
 djangorestframework
 django-cors-headers
-mysqlclient
 pillow
 django-filter
 drf-extensions==0.2.8
