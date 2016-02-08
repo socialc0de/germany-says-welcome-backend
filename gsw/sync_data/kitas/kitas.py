@@ -41,7 +41,7 @@ with open("kitas.csv", encoding='latin-1') as csvfile:
             else:
                 print("No county id for %s"%row[0])
                 csvwriter.writerow(row)
-                county = "05111000"
+                county = "00000000"
             poi = {"translations":{}}
             for language in translations:
                 poi["translations"][language] = {}
