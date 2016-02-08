@@ -2,16 +2,17 @@ import requests
 import random
 import csv
 from os import sys, path; sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from tools import gemeinden, get_or_create_category
 import django
 django.setup()
+from tools import gemeinden, get_or_create_category
 from backend.models import POI, POICategory
 from backend.serializers import POISerializer
 
 translations = {"en":{"name":"Daycare"},"de":{"name":"Kindertagesstätten"},"ar":{"name":"الرعاية النهارية"},"fr":{"name":"Garderie"}}
 category_id, category = get_or_create_category("kitas", translations)
 
-entries_to_delete = POI.objects.all()
+entries_to_delete = POI.objects.filter(categories=category).all()
+import pdb;pdb.set_trace()
 entries_to_delete.delete()
 with open("kitas.csv", encoding='latin-1') as csvfile:
     with open("kitas_kaputt.csv", "w", encoding="latin-1") as errorfile:
