@@ -6,6 +6,5 @@ django-rest-framework-docs==0.1.7
 django-rest-swagger==0.3.4
 djangorestframework==3.3.1
 djangorestframework-gis==0.9.6
-Pillow==3.0.0
 drf-extensions==0.2.8
 
