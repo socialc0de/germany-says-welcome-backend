@@ -13,7 +13,7 @@ def clean_wordpress_content(content):
 langs = ["en","de","fr","ar"]
 questions = {}
 for lang in langs:
-	faq_req = requests.get("http://dev-admin.germany-says-welcome.de/wp-json/wp/v2/faq?lang=%s"%lang)
+	faq_req = requests.get("http://dev-admin.germany-says-welcome.de/?__api=1&type=faq&lang=%s"%lang)
 	data = faq_req.json()
 	for question in data:
 		if question['original_id'] is not None:
@@ -21,16 +21,15 @@ for lang in langs:
 				questions[question['original_id']] = {"translations":{}}
 			if lang not in questions[question['original_id']]['translations']:
 				questions[question['original_id']]['translations'][lang] = {}
-			questions[question['original_id']]['cat_ids'] = []
-			for term in question['_links']['terms']:
-				if term['taxonomy'] == "faq_cat":
-					questions[question['original_id']]['cat_ids'] = [item['id'] for item in term['data']]
-					print(questions[question['original_id']]['cat_ids'])
+			questions[question['original_id']]['cat_ids'] = [item['original_id'] for item in question["categories"]]
+			print(questions[question['original_id']]['cat_ids'])
 			questions[question['original_id']]['translations'][lang]['question'] = clean_wordpress_content(question['title']['rendered'])
 			questions[question['original_id']]['translations'][lang]['answer'] = clean_wordpress_content(question['content']['rendered'])
 			questions[question['original_id']]['id'] = int(question['original_id'])
-			questions[question['original_id']]['county'] = 5
-			questions[question['original_id']]['audiences'] = [Audience.objects.get(id=random.randint(1,3))]
+			questions[question['original_id']]['county'] = "00000000" if len(question["countries"]) == 0 else question["countries"][0]
+			questions[question['original_id']]['audiences'] = []
+			for step in question["steps"]:
+				questions[question['original_id']]['audiences'].append(Audience.objects.get(id=int(step)))
 entries_to_delete = Question.objects.all()
 for question_id in questions:
 	entries_to_delete = entries_to_delete.exclude(id=question_id)
