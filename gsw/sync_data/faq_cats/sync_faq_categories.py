@@ -9,7 +9,7 @@ import filecmp
 langs = ["en","de","fr","ar"]
 faq_categories = {}
 for lang in langs:
-    faq_req = requests.get("http://dev-admin.germany-says-welcome.de/wp-json/wp/v2/faq_cat?lang=%s"%lang)
+    faq_req = requests.get("http://dev-admin.germany-says-welcome.de/?__api=1&type=faq_categories&lang=%s"%lang)
     data = faq_req.json()
     for cat in data:
         if cat['original_id'] is not None:
@@ -17,8 +17,8 @@ for lang in langs:
                 faq_categories[cat['original_id']] = {"translations":{}}
             if lang not in faq_categories[cat['original_id']]['translations']:
                 faq_categories[cat['original_id']]['translations'][lang] = {}
-            faq_categories[cat['original_id']]['translations'][lang]['name'] = cat['name']
-            faq_categories[cat['original_id']]['image_url'] = cat['image_url']
+            faq_categories[cat['original_id']]['translations'][lang]['name'] = cat['title']['rendered']
+            faq_categories[cat['original_id']]['image_url'] = cat['image']
             faq_categories[cat['original_id']]['id'] = int(cat['original_id'])+50
 
 entries_to_delete = FAQCategory.objects.all()
@@ -35,17 +35,19 @@ for cat_id in faq_categories:
             entry = FAQCategory.objects.get(id=cat_id).translate(language)
         entry.name = faq_categories[cat_id]['translations'][language]['name']
         entry.save()
-    image = requests.get(faq_categories[cat_id]['image_url'])
-    image_name = os.path.basename(faq_categories[cat_id]['image_url'])
-    with open("/tmp/%s"%image_name, "wb") as f:
-        f.write(image.content)
-    reopen = open("/tmp/%s"%image_name, "rb")
-    if entry.image != "":
-        old_image = entry.image.open()
-    if reopen != None:
-        if entry.image == "" or old_image == None or (reopen.read() != old_image.read()): #slow, please replace in future
-            django_file = File(reopen)
-            entry.image.save(image_name, django_file)
+    print(faq_categories[cat_id]['image_url'])
+    if faq_categories[cat_id]['image_url']:
+        image = requests.get(faq_categories[cat_id]['image_url'])
+        image_name = os.path.basename(faq_categories[cat_id]['image_url'])
+        with open("/tmp/%s"%image_name, "wb") as f:
+            f.write(image.content)
+        reopen = open("/tmp/%s"%image_name, "rb")
+        if entry.image != "":
+            old_image = entry.image.open()
+        if reopen != None:
+            if entry.image == "" or old_image == None or (reopen.read() != old_image.read()): #slow, please replace in future
+                django_file = File(reopen)
+                entry.image.save(image_name, django_file)
     entry.save()
         
 entries_to_delete.delete()
