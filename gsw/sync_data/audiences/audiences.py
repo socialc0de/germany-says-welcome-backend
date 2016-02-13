@@ -10,4 +10,3 @@ for step in steps:
 		audience.name = step%lang
 		audience.description = step%lang
 	audience.save()
-print(Audience.objects.all())
