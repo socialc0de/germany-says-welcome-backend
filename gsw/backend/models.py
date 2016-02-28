@@ -31,8 +31,8 @@ class GSWCategory(GSWModel):
     translations = TranslatedFields(
         name = models.CharField(max_length=256)
     )
-    """def __str__(self):
-        return self.name"""
+    def __str__(self):
+        return self.name
     class Meta:
         abstract = True
 
@@ -42,8 +42,8 @@ class Audience(GSWModel):
         name = models.CharField(max_length=256),
         description = models.CharField(max_length=256)
     )
-    """def __str__(self):
-        return self.name"""
+    def __str__(self):
+        return self.name
 
 
 class FAQCategory(GSWCategory):
@@ -67,16 +67,18 @@ class Question(GSWModel):
         question = models.CharField(max_length=500),
         answer = models.CharField(max_length=500)
     )
-    """def __str__(self):
-        return self.question"""
+    def __str__(self):
+        return self.question
+
+
 class UnansweredQuestion(GSWModel):
     county = models.CharField(max_length=8)
     question = models.CharField(max_length=500, null=True),
     translations = TranslatedFields(
         question = models.CharField(max_length=500),
     )
-    """def __str__(self):
-        return self.question"""
+    def __str__(self):
+        return self.question
 
 
 class POI(GSWModel):
@@ -87,8 +89,8 @@ class POI(GSWModel):
     translations = TranslatedFields(
         description = models.CharField(max_length=500)
     )
-    """def __str__(self):
-        return self.description"""
+    def __str__(self):
+        return self.description
 
 class Phrase(GSWModel):
     category = models.ForeignKey(PhraseCategory, related_name='phrases')
@@ -96,8 +98,8 @@ class Phrase(GSWModel):
     translations = TranslatedFields(
         phrase = models.CharField(max_length=200)
     )
-    """def __str__(self):
-        return self.phrase"""
+    def __str__(self):
+        return self.phrase
 class EmergencyNumber(GSWModel):
     number = models.CharField(max_length=30, blank=False)
     county = models.CharField(max_length=8)
@@ -105,5 +107,5 @@ class EmergencyNumber(GSWModel):
         name = models.CharField(max_length=100),
         description = models.CharField(max_length=500)
     )
-    """def __str__(self):
-        return self.name"""
+    def __str__(self):
+        return self.name
