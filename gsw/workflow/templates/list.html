@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}{{model}}s{% endblock %}
+{% block content %}
+<ul>
+{% for object in object_list %}
+    <li><a href="{% url 'audience_details' pk=object.id %}">{{ object.name }} - {{ object.description }}</a></li>
+{% empty %}
+    <li>No articles yet.</li>
+{% endfor %}
+</ul>
+{% endblock %}
+{% block formbuttons %}
+    <div class="row center-align">               
+        <div class="col s3">
+            {% with model_name|add:"_reviewed" as view %}
+                <a class="btn-flat" href="{% url view %}">Reviewed</a>
+            {% endwith %}
+        </div>
+        <div class="col s3">
+            {% with model_name|add:"_not-reviewed" as view %}
+                <a class="btn-flat" href="{% url view %}">Unreviewed</a>
+            {% endwith %}
+        </div>
+        <div class="col s3">
+            {% with model_name|add:"_published" as view %}
+                <a class="btn-flat" href="{% url view %}">Published</a>
+            {% endwith %}
+        </div>
+        {% if perms.backend.can_translate %}
+            <div class="cal s4 right-align">
+                {% with model_name|add:"_new" as view %}
+                    <a class="btn btn-primary" href="{% url view %}">New</a>
+                {% endwith %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

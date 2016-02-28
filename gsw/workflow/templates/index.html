@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Index{% endblock %}
+{% block content %}
+<div>
+	<div class="collection">
+        {% for name, url in models %}
+        	<a href="{{url}}" class="collection-item">{{name}}</a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}

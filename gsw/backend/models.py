@@ -1,9 +1,33 @@
 from django.contrib.gis.db import models
 from hvad.models import TranslatableModel, TranslatedFields
-
+from django_fsm import FSMField, transition
 
 #own classes
-class GSWCategory(TranslatableModel):
+
+class GSWModel(TranslatableModel):
+    state = FSMField(default='new', choices=[("new", "Object in Translation"), ("translated", "Object needs Review"), ("reviewed", "Object can be published"), ("published", "Object is public")])
+    @transition(field=state, source='new', target='translated',
+        permission=lambda user: user.has_perm('gsw.can_translate'))
+    def translated(self):
+        pass
+    @transition(field=state, source=['new', 'translated'], target='reviewed',
+        permission=lambda user: user.has_perm('gsw.can_review'))
+    def reviewed(self):
+        pass
+    @transition(field=state, source='reviewed', target='published',
+        permission=lambda user: user.has_perm('gsw.can_publish'))
+    def publish(self):
+        pass
+    class Meta:
+        abstract = True
+        permissions = (
+            ("can_translate", "Can translate objects."),
+            ("can_review", "Can review an objects."),
+            ("can_publish", "Can publish objects (only very few people should be allowed to do that)"),
+        )
+
+
+class GSWCategory(GSWModel):
     translations = TranslatedFields(
         name = models.CharField(max_length=256)
     )
@@ -13,13 +37,13 @@ class GSWCategory(TranslatableModel):
         abstract = True
 
 
-class Audience(TranslatableModel):
+class Audience(GSWModel):
     translations = TranslatedFields(
         name = models.CharField(max_length=256),
         description = models.CharField(max_length=256)
     )
-    def __str__(self):
-        return self.name
+    #def __str__(self):
+    #    return self.name
 
 
 class FAQCategory(GSWCategory):
@@ -35,7 +59,7 @@ class PhraseCategory(GSWCategory):
     translations = TranslatedFields()
 
 
-class Question(TranslatableModel):
+class Question(GSWModel):
     county = models.CharField(max_length=8)
     audiences = models.ManyToManyField(Audience)
     categories = models.ManyToManyField(FAQCategory)
@@ -43,14 +67,14 @@ class Question(TranslatableModel):
         question = models.CharField(max_length=500),
         answer = models.CharField(max_length=500)
     )
-class UnansweredQuestion(TranslatableModel):
+class UnansweredQuestion(GSWModel):
     county = models.CharField(max_length=8)
     question = models.CharField(max_length=500, null=True),
     translations = TranslatedFields(
         question = models.CharField(max_length=500),
     )
 
-class POI(TranslatableModel):
+class POI(GSWModel):
     location = models.PointField()
     county = models.CharField(max_length=8)
     audiences = models.ManyToManyField(Audience)
@@ -59,14 +83,14 @@ class POI(TranslatableModel):
         description = models.CharField(max_length=500)
     )
 
-class Phrase(TranslatableModel):
+class Phrase(GSWModel):
     category = models.ForeignKey(PhraseCategory, related_name='phrases')
     text_id = models.CharField(max_length=200, primary_key=True, blank=False)
     translations = TranslatedFields(
         phrase = models.CharField(max_length=200)
     )
 
-class EmergencyNumber(TranslatableModel):
+class EmergencyNumber(GSWModel):
     number = models.CharField(max_length=30, blank=False)
     county = models.CharField(max_length=8)
     translations = TranslatedFields(

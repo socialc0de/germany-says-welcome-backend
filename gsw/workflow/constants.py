@@ -1,0 +1,2 @@
+from backend.models import Audience, Question, FAQCategory, POI, POICategory, Phrase, PhraseCategory, EmergencyNumber
+MODELS = [Audience, Question, FAQCategory, POI, POICategory, Phrase, PhraseCategory, EmergencyNumber]

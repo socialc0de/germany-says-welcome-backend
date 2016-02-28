@@ -1,0 +1,9 @@
+<nav>
+    <div class="nav-wrapper">
+        <div class="col s12">
+        {% for crumb in crumbs %}
+          <a href="{{crumb.url}}" class="breadcrumb">{{crumb.name}}</a>
+        {% endfor %}
+        </div>
+    </div>
+</nav>

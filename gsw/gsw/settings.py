@@ -42,6 +42,9 @@ INSTALLED_APPS = (
     'corsheaders',
     'hvad',
     'backend',
+    'workflow',
+    'django_extensions',
+    'material',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -55,6 +58,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware'
 )
 
 ROOT_URLCONF = 'gsw.urls'
@@ -121,3 +125,4 @@ from gsw.local_settings import *
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+

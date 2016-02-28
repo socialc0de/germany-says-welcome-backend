@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load material_form %}
+
+{% block extrahead %}
+<style type="text/css">
+    {{ form.css }}
+</style>
+{% endblock %}
+
+{% block title %}{{ form.title }}{% endblock %}
+
+{% block content %}
+    {% form %}{% endform %}
+{% endblock %}
+{% if perms.backend.can_translate %}
+{% block formbuttons %}<button class="btn btn-primary" type="submit">Save</button>{% endblock %}
+{% endif %}

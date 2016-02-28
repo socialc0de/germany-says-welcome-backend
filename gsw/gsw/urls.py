@@ -22,6 +22,9 @@ from backend import views
 from backend.routers import GSWDefaultRouter
 from backend import urls
 from gsw import settings
+from workflow import urls as workflow_urls
+from django.contrib.auth import views as auth_views
+
 
 apirouter = GSWDefaultRouter()
 apirouter.register(r'audiences', views.AudienceViewSet)
@@ -36,8 +39,12 @@ apirouter.register(r'emergencynumbers', views.EmergencyNumberViewSet)
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(apirouter.urls)),
+    url(r'^workflow/', include(workflow_urls)),
     url(r'^api/', include(urls)),
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT, 'show_indexes': False}),
+    url(r'^accounts/login/$', auth_views.login,
+       {'template_name': 'admin/login.html'}),
+    url(r'^accounts/logout/$', auth_views.logout),
     ]
