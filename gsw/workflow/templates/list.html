@@ -3,7 +3,9 @@
 {% block content %}
 <ul>
 {% for object in object_list %}
-    <li><a href="{% url 'audience_details' pk=object.id %}">{{ object.name }} - {{ object.description }}</a></li>
+    {% with model_name|add:"_details" as view %}
+        <li><a href="{% url view pk=object.id %}">{{ object.name }} - {{ object.description }}</a></li>
+    {% endwith %}
 {% empty %}
     <li>No articles yet.</li>
 {% endfor %}
