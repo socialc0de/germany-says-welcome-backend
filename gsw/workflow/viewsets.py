@@ -1,8 +1,8 @@
 from viewsets import ModelViewSet
 from workflow.views import * 
 class GSWModelViewSet(ModelViewSet):
-    PLACEHOLDER_PATTERN = r'(?P<pk>[0-9]+)/'
-    LANGUAGE_PATTERN = r'(?P<language>[a-z-]+)/'
+    PLACEHOLDER_PATTERN = r'(?P<pk>[0-9]*)/'
+    LANGUAGE_PATTERN = r'(?P<language>[a-z-]*)/'
     views = {
         'list_view': {
             'view': GSWListView,

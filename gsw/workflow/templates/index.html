@@ -9,5 +9,6 @@
     </div>
 </div>
 {% endblock %}
-{% block footer %}
+{% block formbuttons %}
+<a class="btn btn-primary" href="{% url 'django.contrib.auth.views.login' %}?next={{request.path}}">Login</a>
 {% endblock %}
