@@ -33,4 +33,4 @@ class TranslatableFormMixin():
 
 
 class GSWMixin(TranslatableFormMixin, ModelNameContextMixin):
-    paginate_by = 10
+    paginate_by = 50

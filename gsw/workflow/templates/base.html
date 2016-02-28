@@ -35,7 +35,7 @@
                             {% endif %}
                             {% with ''|center:page_obj.paginator.num_pages as range %}
                             {% for _ in range %}
-                                <li {% if forloop.counter == page_obj.number %}class="active"{% else %}class="waves-effect"{% endif %}><a href="#!">{{ forloop.counter }}</a></li>
+                                <li {% if forloop.counter == page_obj.number %}class="active"{% else %}class="waves-effect"{% endif %}><a href="{{ request.path }}?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
                             {% endfor %}
                             {% endwith %}
                             {% if not page_obj.has_next %}
