@@ -15,7 +15,7 @@
 	{% with object_list|first as object %}
 		<div class="row">
 			{% if perms.backend.can_review  %}
-				{% if state == "new" or state == "translated" %}
+				{% if object.state == "new" or object.state == "translated" %}
 				<div class="col left-align">
 					{% with model_name|add:"_review" as view %}
 				      	<a class="btn btn-primary" href="{% url view pk=object.pk %}">Review</a>
@@ -23,7 +23,7 @@
 			    </div>
 			    {% endif %}
 			{% endif %}
-			{% if perms.backend.can_publish and state == "reviewed" %}
+			{% if perms.backend.can_publish and object.state == "reviewed" %}
 			    <div class="col">
 			    	{% with model_name|add:"_publish" as view %}
 			      		<a class="btn btn-primary" href="{% url view pk=object.pk %}">Publish</a>
