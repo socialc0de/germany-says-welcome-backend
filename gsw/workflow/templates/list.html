@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}{{model}}s{% endblock %}
+{% block title %}{{ title_prefix }} {{model}}s{% endblock %}
 {% block content %}
 <ul>
 {% for object in object_list %}

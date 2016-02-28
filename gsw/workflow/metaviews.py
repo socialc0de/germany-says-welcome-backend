@@ -15,6 +15,11 @@ class GSWNewView(GSWMixin, TranslationPermissionRequiredMixin, CreateView):
 class GSWListView(GSWMixin, ListView):
     template_name = 'list.html'
     language_order = ["en", "de", "fr", "ar"]
+    title_prefix = None
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title_prefix'] = self.title_prefix
+        return context
     def get_queryset(self):
         assert self.language_order != None, "You have to set language_order"
         assert self.model != None, "You have to set model"
@@ -65,6 +70,7 @@ class GSWModifyConfirmView(GSWMixin, ListView):
     template_name = 'confirm-modify.html'
     success_url = "../"
     pk_field = "pk"
+    button_text = "Confirm"
     def get_queryset(self):
         assert self.model != None, "You have to set model"
         pk = self.kwargs.get(self.pk_field)
@@ -78,30 +84,39 @@ class GSWModifyConfirmView(GSWMixin, ListView):
         return HttpResponseRedirect(self.success_url)
     def modify(self, obj):
         return obj
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['confirm_button'] = self.button_text
+        return context
 
 class GSWReviewView(ReviewPermissionRequiredMixin, GSWModifyConfirmView):
+    button_text = "Review"
     def modify(self, obj):
         obj.reviewed()
         return obj
 
 
 class GSWPublishView(PublishPermissionRequiredMixin, GSWModifyConfirmView):
+    button_text = "Publish"
     def modify(self, obj):
         obj.publish()
         return obj
 
 
 class GSWReviewedView(GSWListView):
+    title_prefix = "Reviewed"
     def filter(self, queryset):
         queryset = queryset.filter(state="reviewed")
         return queryset
 
 class GSWPublishedView(GSWListView):
+    title_prefix = "Published"
     def filter(self, queryset):
         queryset = queryset.filter(state="published")
         return queryset
 
 class GSWNotReviewedView(GSWListView):
+    title_prefix = "Unreviewed"
     def filter(self, queryset):
         queryset = queryset.filter(Q(state="new") | Q(state="translated"))
         return queryset

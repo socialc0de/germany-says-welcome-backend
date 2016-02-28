@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.template.defaultfilters import slugify
 from hvad.forms import TranslatableModelForm
 from django import forms
+from workflow.forms import get_TranslatableGSWModelForm_from_model
 class TranslationPermissionRequiredMixin(PermissionRequiredMixin):
     permission_required = "backend.can_translate"
 
@@ -24,12 +25,7 @@ class ModelNameContextMixin():
 
 class TranslatableFormMixin():
     def get_form_class(self):
-        class TranslatableGSWModelForm(TranslatableModelForm):
-            class Meta:
-                exclude = ["state"]
-                model = self.model
-            language_code = forms.ChoiceField(choices=(('de', 'German'), ('en', 'English'), ('ar', 'Arabic'), ('fr', 'French')))
-        return TranslatableGSWModelForm
+        return get_TranslatableGSWModelForm_from_model(self.model)
 
 
 class GSWMixin(TranslatableFormMixin, ModelNameContextMixin):
