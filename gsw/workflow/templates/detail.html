@@ -4,7 +4,7 @@
 <ul>
 {% for object in object_list %}
 	{% with model_name|add:"_edit" as view %}
-    	<li><a href="{% url view pk=object.pk language=object.language_code%}">{{ object.language_code }}: {{ object.name }} - {{ object.description }}</a></li>
+    	<li><a href="{% url view pk=object.pk language=object.language_code%}">{{ object.language_code }}: {{ object }}</a></li>
     {% endwith %}
 {% empty %}
     <li>No articles yet.</li>
