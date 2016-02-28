@@ -9,11 +9,12 @@
     </div>
 </div>
 {% endblock %}
-{% if user.is_authenticated %}
+{% if not user.is_authenticated %}
 	{% block formbuttons %}
-	<a class="btn btn-primary" href="{% url 'django.contrib.auth.views.login' %}?next={{request.path}}">Login</a>
+		<a class="btn btn-primary" href="{% url 'django.contrib.auth.views.login' %}?next={{request.path}}">Login</a>
 	{% endblock %}
 {% else %}
-	{% block footer %}
+	{% block formbuttons %}
+		<a class="btn btn-primary" href="{% url 'django.contrib.auth.views.logout' %}?next={{request.path}}">Logout</a>
 	{% endblock %}
 {% endif %}
