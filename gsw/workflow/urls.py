@@ -18,7 +18,6 @@ urlpatterns = [url(r'^$', IndexView.as_view(), name="home")]
 for model in MODELS:
 	urls = GSWModelViewSet(model).urls
 	urlpatterns.append(url('', include(urls)))
-	print(urls)
 #url('', include(GSWModelViewSet(FAQCategory).urls)),
 #url('', include(GSWModelViewSet(Audience).urls)),
 #import pdb;pdb.set_trace()

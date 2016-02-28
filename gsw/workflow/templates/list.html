@@ -4,7 +4,7 @@
 <ul>
 {% for object in object_list %}
     {% with model_name|add:"_details" as view %}
-        <li><a href="{% url view pk=object.id %}">{{ object }}</a></li>
+        <li><a href="{% url view pk=object.pk %}">{{ object }}</a></li>
     {% endwith %}
 {% empty %}
     <li>No articles yet.</li>

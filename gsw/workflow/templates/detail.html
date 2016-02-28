@@ -4,7 +4,7 @@
 <ul>
 {% for object in object_list %}
 	{% with model_name|add:"_edit" as view %}
-    	<li><a href="{% url view pk=object.id language=object.language_code%}">{{ object.language_code }}: {{ object.name }} - {{ object.description }}</a></li>
+    	<li><a href="{% url view pk=object.pk language=object.language_code%}">{{ object.language_code }}: {{ object.name }} - {{ object.description }}</a></li>
     {% endwith %}
 {% empty %}
     <li>No articles yet.</li>
@@ -17,21 +17,21 @@
 			{% if perms.backend.can_review %}
 				<div class="col left-align">
 					{% with model_name|add:"_review" as view %}
-				      	<a class="btn btn-primary" href="{% url view pk=object.id %}">Review</a>
+				      	<a class="btn btn-primary" href="{% url view pk=object.pk %}">Review</a>
 			      	{% endwith %}
 			    </div>
 			{% endif %}
 			{% if perms.backend.can_publish %}
 			    <div class="col">
 			    	{% with model_name|add:"_publish" as view %}
-			      		<a class="btn btn-primary" href="{% url view pk=object.id %}">Publish</a>
+			      		<a class="btn btn-primary" href="{% url view pk=object.pk %}">Publish</a>
 	      			{% endwith %}
 			    </div>
 		    {% endif %}
 			{% if perms.backend.can_translate %}
 			    <div class="right-align">
 					{% with model_name|add:"_edit" as view %}			    
-			      		<a class="btn btn-primary" href="{% url view pk=object.id language='new' %}">New Translation</a>
+			      		<a class="btn btn-primary" href="{% url view pk=object.pk language='new' %}">New Translation</a>
 			      	{% endwith %}
 			    </div>
 		    {% endif %}
