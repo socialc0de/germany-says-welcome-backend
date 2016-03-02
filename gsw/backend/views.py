@@ -1,4 +1,4 @@
-from backend.serializers import *
+from backend.serializers import QuestionSerializer, UnansweredQuestionSerializer, POISerializer, PhraseSerializer, AudienceSerializer, FAQCategorySerializer, POICategorySerializer, PhraseCategorySerializer, UserSerializer, EmergencyNumberSerializer
 from rest_framework import generics, viewsets
 from django.contrib.auth.models import User
 from rest_framework import permissions
@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.exceptions import ValidationError
-from django.conf import settings
 import smtplib
 from backend.exceptions import ServiceUnavailable
 from django.conf import settings

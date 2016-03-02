@@ -66,16 +66,11 @@ class GSWEditView(GSWMixin, TranslationPermissionRequiredMixin, UpdateView):
         return initial
 
 
-class GSWModifyConfirmView(GSWMixin, ListView):
+class GSWModifyConfirmView(GSWDetailView):
     template_name = 'confirm-modify.html'
     success_url = "../"
     pk_field = "pk"
     button_text = "Confirm"
-    def get_queryset(self):
-        assert self.model != None, "You have to set model"
-        pk = self.kwargs.get(self.pk_field)
-        queryset = self.model.objects.language("all").filter(pk=pk)
-        return queryset
     def post(self, *args, **kwargs):
         pk = kwargs.get(self.pk_field)
         obj = self.model.objects.get(pk=pk)
@@ -102,21 +97,20 @@ class GSWPublishView(PublishPermissionRequiredMixin, GSWModifyConfirmView):
         obj.publish()
         return obj
 
-
-class GSWReviewedView(GSWListView):
-    title_prefix = "Reviewed"
+class GSWStateView(GSWListView):
+    title_prefix = None
+    filter = None
     def filter(self, queryset):
-        queryset = queryset.filter(state="reviewed")
-        return queryset
+        return queryset.filter(self.filter)
+
+class GSWReviewedView(GSWStateView):
+    title_prefix = "Reviewed"
+    filter = Q(state="reviewed")
 
 class GSWPublishedView(GSWListView):
     title_prefix = "Published"
-    def filter(self, queryset):
-        queryset = queryset.filter(state="published")
-        return queryset
+    filter = Q(state="published")
 
 class GSWNotReviewedView(GSWListView):
     title_prefix = "Unreviewed"
-    def filter(self, queryset):
-        queryset = queryset.filter(Q(state="new") | Q(state="translated"))
-        return queryset
+    filter = Q(state="new") | Q(state="translated")
