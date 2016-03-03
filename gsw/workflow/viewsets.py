@@ -1,5 +1,5 @@
 from viewsets import ModelViewSet
-from workflow.views import * 
+from workflow.views import GSWListView, GSWNewView, GSWDetailView, GSWEditView, GSWReviewView, GSWPublishView, GSWReviewedView, GSWPublishedView, GSWNotReviewedView
 class GSWModelViewSet(ModelViewSet):
     PLACEHOLDER_PATTERN = r'(?P<pk>[^/.a-z]+)/'
     LANGUAGE_PATTERN = r'(?P<language>[a-z-]+)/'

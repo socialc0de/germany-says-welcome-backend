@@ -3,7 +3,7 @@ from django.views.generic.list import ListView
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 
-from workflow.mixins import *
+from workflow.mixins import GSWMixin, TranslationPermissionRequiredMixin, ReviewPermissionRequiredMixin, PublishPermissionRequiredMixin
 #from workflow.forms import TranslatableGSWModelForm
 
 
