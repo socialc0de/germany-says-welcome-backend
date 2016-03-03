@@ -19,7 +19,7 @@ class GSWListView(GSWMixin, ListView):
     additional_context_data = None
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.get_additional_context_data)
+        context.update(self.get_additional_context_data())
         return context
     def get_additional_context_data(self):
         assert self.title_prefix != None, "You have to set title_prefix"
