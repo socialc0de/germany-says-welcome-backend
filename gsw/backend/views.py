@@ -15,7 +15,7 @@ from backend.exceptions import ServiceUnavailable
 from django.conf import settings
 from rest_framework_extensions.mixins import CacheResponseAndETAGMixin
 from rest_framework_extensions.etag.decorators import etag
-
+from backend.models import Question, UnansweredQuestion, POI, Phrase, Audience, FAQCategory, POICategory, PhraseCategory, EmergencyNumber
 
 #own classes
 class FilteredListView(CacheResponseAndETAGMixin, ListAPIView):
