@@ -22,7 +22,6 @@ class GSWListView(GSWMixin, ListView):
         context.update(self.get_additional_context_data())
         return context
     def get_additional_context_data(self):
-        assert self.title_prefix != None, "You have to set title_prefix"
         return {'title_prefix': self.title_prefix}
     def get_queryset(self):
         assert self.language_order != None, "You have to set language_order"
