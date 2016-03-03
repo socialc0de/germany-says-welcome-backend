@@ -13,7 +13,7 @@ def clean_wordpress_content(content):
 langs = ["en","de","fr","ar"]
 questions = {}
 for lang in langs:
-	faq_req = requests.get("http://dev-admin.germany-says-welcome.de/wp-json/wp/v2/emergency?lang=%s"%lang)
+	faq_req = requests.get("http://dev-admin.germany-says-welcome.de/wp-json/wp/v2/emergency?lang={0!s}".format(lang))
 	data = faq_req.json()
 	for question in data:
 		if question['original_id'] is not None:
