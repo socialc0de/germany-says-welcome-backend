@@ -16,10 +16,14 @@ class GSWListView(GSWMixin, ListView):
     template_name = 'list.html'
     language_order = ["en", "de", "fr", "ar"]
     title_prefix = None
+    additional_context_data = None
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title_prefix'] = self.title_prefix
+        context.update(self.get_additional_context_data)
         return context
+    def get_additional_context_data(self):
+        assert self.title_prefix != None, "You have to set title_prefix"
+        return {'title_prefix': self.title_prefix}
     def get_queryset(self):
         assert self.language_order != None, "You have to set language_order"
         assert self.model != None, "You have to set model"
@@ -79,10 +83,9 @@ class GSWModifyConfirmView(GSWDetailView):
         return HttpResponseRedirect(self.success_url)
     def modify(self, obj):
         return obj
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['confirm_button'] = self.button_text
-        return context
+    def get_additional_context_data(self):
+        assert self.confirm_button != None, "You have to set confirm_button"
+        return {'confirm_button': self.button_text}
 
 class GSWReviewView(ReviewPermissionRequiredMixin, GSWModifyConfirmView):
     button_text = "Review"
