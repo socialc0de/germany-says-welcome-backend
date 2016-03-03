@@ -109,10 +109,10 @@ class GSWReviewedView(GSWStateView):
     title_prefix = "Reviewed"
     filter = Q(state="reviewed")
 
-class GSWPublishedView(GSWListView):
+class GSWPublishedView(GSWStateView):
     title_prefix = "Published"
     filter = Q(state="published")
 
-class GSWNotReviewedView(GSWListView):
+class GSWNotReviewedView(GSWStateView):
     title_prefix = "Unreviewed"
     filter = Q(state="new") | Q(state="translated")
