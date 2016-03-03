@@ -9,7 +9,7 @@ import filecmp
 langs = ["en","de","fr","ar"]
 faq_categories = {}
 for lang in langs:
-    faq_req = requests.get("http://dev-admin.germany-says-welcome.de/?__api=1&type=faq_categories&lang=%s"%lang)
+    faq_req = requests.get("http://dev-admin.germany-says-welcome.de/?__api=1&type=faq_categories&lang={0!s}".format(lang))
     data = faq_req.json()
     for cat in data:
         if cat['original_id'] is not None:
@@ -39,9 +39,9 @@ for cat_id in faq_categories:
     if faq_categories[cat_id]['image_url']:
         image = requests.get(faq_categories[cat_id]['image_url'])
         image_name = os.path.basename(faq_categories[cat_id]['image_url'])
-        with open("/tmp/%s"%image_name, "wb") as f:
+        with open("/tmp/{0!s}".format(image_name), "wb") as f:
             f.write(image.content)
-        reopen = open("/tmp/%s"%image_name, "rb")
+        reopen = open("/tmp/{0!s}".format(image_name), "rb")
         if entry.image != "":
             old_image = entry.image.open()
         if reopen != None:

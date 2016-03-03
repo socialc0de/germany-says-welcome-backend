@@ -59,7 +59,7 @@ class GSWDefaultViewSet(CacheResponseAndETAGMixin, viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         assert self.model_class is not None, "You need to override model_class"
-        serializer_name = "%sSerializer" % self.model_class.__name__
+        serializer_name = "{0!s}Serializer".format(self.model_class.__name__)
         return globals()[serializer_name]
 
 
