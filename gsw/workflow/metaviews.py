@@ -28,9 +28,9 @@ class GSWListView(GSWMixin, ListView):
         assert self.language_order != None, "You have to set language_order"
         assert self.model != None, "You have to set model"
         queryset = self.model.objects.language(self.language_order[0]).fallbacks(*self.language_order[1:])
-        queryset = self.filter(queryset)
+        queryset = self.filter_queryset(queryset)
         return queryset
-    def filter(self, queryset):
+    def filter_queryset(self, queryset):
         return queryset
 
 
@@ -103,7 +103,7 @@ class GSWPublishView(PublishPermissionRequiredMixin, GSWModifyConfirmView):
 class GSWStateView(GSWListView):
     title_prefix = None
     filter = None
-    def filter(self, queryset):
+    def filter_queryset(self, queryset):
         return queryset.filter(self.filter)
 
 class GSWReviewedView(GSWStateView):
